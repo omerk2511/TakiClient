@@ -18,9 +18,10 @@ namespace Taki
                 throw new ArgumentException();
             }
             playersList = new List<Player>();
-            for (int i = 0; i < playerNum; i++)
+            playersList.Add(new ActivePlayer());
+            for (int i = 1; i < playerNum; i++)
             {
-                playersList.Add(new Player());
+                playersList.Add(new NonActivePlayer(8));
             }
         }
 
