@@ -77,6 +77,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CardControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Cards\Card.cs" />
     <Compile Include="Cards\ChangeColorCard.cs" />
     <Compile Include="Cards\ChangeDirectionCard.cs" />
@@ -92,6 +95,8 @@
     </Compile>
     <Compile Include="Cards\JSONCard.cs" />
     <Compile Include="Cards\NumberCard.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Cards\StopCard.cs" />
@@ -125,6 +130,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\1b.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1y.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1y.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1r.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1g.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

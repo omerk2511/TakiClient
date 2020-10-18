@@ -20,19 +20,14 @@ namespace Taki
         [STAThread]
         static void Main()
         {
+            try
+            {
+                Game game = new Game(4);
+            }catch(ArgumentException e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
-            Card[] hand = new Card[5];
-            hand[0] = new PlusCard(Color.GREEN);
-            hand[1] = new TwoPlusCard(Color.YELLOW);
-            hand[2] = new PlusCard(Color.YELLOW);
-            hand[3] = new TakiCard(Color.YELLOW);
-            hand[4] = new TwoPlusCard(Color.YELLOW);
-
-            hand[1].Serialize();
-
-            //List<Card> hand = new List<Card>(5);
-            //hand.Add(new NumberCard(1, Color.GREEN));
-            //hand.Add(new NumberCard(3, Color.GREEN));
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
