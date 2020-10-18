@@ -20,7 +20,13 @@ namespace Taki
         [STAThread]
         static void Main()
         {
-            Game game = new Game(4);
+            try
+            {
+                Game game = new Game(4);
+            }catch(ArgumentException e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

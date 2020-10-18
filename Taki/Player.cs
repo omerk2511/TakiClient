@@ -31,28 +31,28 @@ namespace Taki
             }
             switch (jsonCard.type)
             {
-                case ("number_card"):
+                case "number_card":
                     c = new NumberCard(int.Parse(cardValue), cardColor);
                     break;
-                case ("plus"):
+                case "plus":
                     c = new PlusCard(cardColor);
                     break;
-                case ("plus_2"):
+                case "plus_2":
                     c = new TwoPlusCard(cardColor);
                     break;
-                case ("stop"):
+                case "stop":
                     c = new StopCard(cardColor);
                     break;
-                case ("change_direction"):
+                case "change_direction":
                     c = new ChangeDirectionCard(cardColor);
                     break;
-                case ("change_color"):
+                case "change_color":
                     c = new ChangeColorCard();
                     break;
-                case ("taki"):
+                case "taki":
                     c = new TakiCard(cardColor);
                     break;
-                case ("super_taki"):
+                case "super_taki":
                     c = new SuperTakiCard();
                     break;
             }
@@ -70,7 +70,7 @@ namespace Taki
         }
 
         // Remove the card specified by cardIndex and return it
-        public Card PlayCard(int cardIndex)
+        public Card RemoveCard(int cardIndex)
         {
             Card tempCard = hand[cardIndex];
             hand.RemoveAt(cardIndex);

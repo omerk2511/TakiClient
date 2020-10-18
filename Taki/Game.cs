@@ -15,7 +15,7 @@ namespace Taki
         {
             if (playerNum > 4 || playerNum < 2)
             {
-                playerNum = 4;
+                throw new ArgumentException();
             }
             playersList = new List<Player>();
             for (int i = 0; i < playerNum; i++)

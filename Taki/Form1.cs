@@ -19,22 +19,24 @@ namespace Taki
             InitializeComponent();
         }
 
+        // Get a rectangle bounds from a PointF array.
         private void GetPointBounds(PointF[] points,
         out float xmin, out float xmax,
         out float ymin, out float ymax)
+        {
+            xmin = points[0].X;
+            xmax = xmin;
+            ymin = points[0].Y;
+            ymax = ymin;
+            foreach (PointF point in points)
             {
-                xmin = points[0].X;
-                xmax = xmin;
-                ymin = points[0].Y;
-                ymax = ymin;
-                foreach (PointF point in points)
-                {
-                    if (xmin > point.X) xmin = point.X;
-                    if (xmax < point.X) xmax = point.X;
-                    if (ymin > point.Y) ymin = point.Y;
-                    if (ymax < point.Y) ymax = point.Y;
-                }
+                if (xmin > point.X) xmin = point.X;
+                if (xmax < point.X) xmax = point.X;
+                if (ymin > point.Y) ymin = point.Y;
+                if (ymax < point.Y) ymax = point.Y;
             }
+        }
+
         private Bitmap RotateBitmap(Graphics gr, float angle, int x, int y, int h, int w, string imageName)
         {
             Bitmap bm = (Bitmap)Taki.Properties.Resources.ResourceManager.
@@ -55,6 +57,7 @@ namespace Taki
                 new PointF(x, y + h),
             };
             rotate_at_origin.TransformPoints(points);
+
             float xmin, xmax, ymin, ymax;
             GetPointBounds(points, out xmin, out xmax,
                 out ymin, out ymax);
@@ -92,7 +95,7 @@ namespace Taki
             int circleCenterY = (this.Height * 5) / 6;
             int x, y;
 
-            int cardAmount = 10;
+            int cardAmount = 8;
             int devisor = 180 / (cardAmount + 1);
 
             for (int i = devisor; i <= 180 - devisor; i += devisor)
@@ -112,16 +115,6 @@ namespace Taki
 
                 RotateBitmap(e.Graphics, angle - 90, x, y, 200, 100, "1b");
             }
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-       
-        private void timer1_Tick(object sender, EventArgs e)
-        {
         }
     }
 }
