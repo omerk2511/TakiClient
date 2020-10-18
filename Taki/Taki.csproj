@@ -77,6 +77,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NonActivePlayer.cs" />
+    <Compile Include="ActivePlayer.cs" />
     <Compile Include="Cards\Card.cs" />
     <Compile Include="Cards\ChangeColorCard.cs" />
     <Compile Include="Cards\ChangeDirectionCard.cs" />
