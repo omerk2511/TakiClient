@@ -40,7 +40,7 @@ namespace Taki
 
         public override string GetResourceName()
         {
-            return(Number.ToString() + base.GetColorName());
+            return("_" + Number.ToString() + base.GetColorName());
         }
     }
 }

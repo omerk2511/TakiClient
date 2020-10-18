@@ -9,6 +9,7 @@ namespace Taki
     class Game
     {
         private List<Player> playersList;
+        public List<Card> usedCards;
 
         // playersNum must be a number between 2 to 4
         public Game(int playerNum)
@@ -22,6 +23,12 @@ namespace Taki
             for (int i = 1; i < playerNum; i++)
             {
                 playersList.Add(new NonActivePlayer(8));
+            }
+
+            usedCards = new List<Card>();
+            for (int i = 0; i < 50; i++)
+            {
+                usedCards.Add(new NumberCard(1, Color.YELLOW));
             }
         }
 

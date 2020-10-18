@@ -20,17 +20,19 @@ namespace Taki
         [STAThread]
         static void Main()
         {
+            Game game;
             try
             {
-                Game game = new Game(4);
+                game = new Game(4);
             }catch(ArgumentException e)
             {
                 Console.WriteLine(e.Message);
+                return;
             }
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new Form1(game));
         }
     }
 }
