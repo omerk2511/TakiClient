@@ -24,7 +24,7 @@ namespace Taki
         {
             Card c = null;
             string cardValue = jsonCard.value;
-            Color cardColor = Color.GREEN;
+            Color cardColor = Color.UNDEFINED;
             if (jsonCard.color != "")
             {
                 cardColor = (Color)Enum.Parse(typeof(Color), jsonCard.color, true);

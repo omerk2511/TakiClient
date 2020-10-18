@@ -77,9 +77,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CardControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Cards\Card.cs" />
     <Compile Include="Cards\ChangeColorCard.cs" />
     <Compile Include="Cards\ChangeDirectionCard.cs" />

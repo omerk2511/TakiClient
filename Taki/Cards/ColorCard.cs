@@ -8,7 +8,7 @@ namespace Taki
 {
     enum Color
     {
-        RED, BLUE, GREEN, YELLOW
+        RED, BLUE, GREEN, YELLOW, UNDEFINED
     }
 
     abstract class ColorCard : Card
