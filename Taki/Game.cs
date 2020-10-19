@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -57,6 +58,18 @@ namespace Taki
         public int GetPlayersAmount()
         {
             return playersList.Count;
+        }
+        
+        public int GetPlayerIndex(Player player)
+        {
+            for(int i = 0; i < playersList.Count; i++)
+            {
+                if (playersList[i].Equals(player))
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
     }
 }
