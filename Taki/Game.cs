@@ -18,8 +18,20 @@ namespace Taki
             {
                 throw new ArgumentException();
             }
+
             playersList = new List<Player>();
-            playersList.Add(new ActivePlayer());
+
+            //##TEST
+            List<JSONCard> l = new List<JSONCard>();
+            for (int i = 0; i < 8; i++) {
+                l.Add(new JSONCard("number_card", "red", "1"));
+            }
+            playersList.Add(new ActivePlayer(l));
+            //##TEST
+
+            //playersList.Add(new ActivePlayer());
+
+
             for (int i = 1; i < playerNum; i++)
             {
                 playersList.Add(new NonActivePlayer(8));
@@ -35,6 +47,16 @@ namespace Taki
         public Player GetPlayer(int playerIndex)
         {
             return playersList[playerIndex];
+        }
+        
+        public ActivePlayer GetActivePlayer()
+        {
+            return (ActivePlayer)playersList[0];
+        }
+        
+        public int GetPlayersAmount()
+        {
+            return playersList.Count;
         }
     }
 }

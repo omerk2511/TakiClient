@@ -30,6 +30,21 @@ namespace Taki
         {
             this._cardCount++;
         }
+        
+        public override int GetCardAmount()
+        {
+            return this._cardCount;
+        }
+
+        public override List<string> GetCardResources()
+        {
+            List<string> lst = new List<string>(this.cardCount);
+            for(int i = 0; i < this.cardCount; i++)
+            {
+                lst.Add("back");
+            }
+            return lst;
+        }
 
     }
 }
