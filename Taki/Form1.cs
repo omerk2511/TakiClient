@@ -96,7 +96,6 @@ namespace Taki
         {
             int x, y;
             int devisor = 180 / (resourcesName.Count() + 1);
-            //for (int i = angleOffset + devisor; i <= 180 - devisor + angleOffset; i += devisor)
             int angle = angleOffset + devisor;
             for (int i = 0; i < resourcesName.Count(); i += 1)
             {
@@ -146,6 +145,19 @@ namespace Taki
             else
             {
                 // Update player's hand
+                int playerIndex = this.game.GetPlayerIndex(player);
+                switch(playerIndex)
+                {
+                    case 1:
+                        this.Invalidate(new Rectangle(0, 0, this.Width / 3, this.Height));
+                        break;
+                    case 2:
+                        this.Invalidate(new Rectangle(0, 0, this.Width, this.Height / 4));
+                        break;
+                    case 3:
+                        this.Invalidate(new Rectangle((this.Width * 2) / 3, 0, this.Width / 3, this.Height));
+                        break;
+                }
             }
         }
 
@@ -161,7 +173,19 @@ namespace Taki
             else
             {
                 // Update player's hand
-            }
+                int playerIndex = this.game.GetPlayerIndex(player);
+                switch (playerIndex)
+                {
+                    case 1:
+                        this.Invalidate(new Rectangle(0, 0, this.Width / 3, this.Height));
+                        break;
+                    case 2:
+                        this.Invalidate(new Rectangle(0, 0, this.Width, this.Height / 4));
+                        break;
+                    case 3:
+                        this.Invalidate(new Rectangle((this.Width * 2) / 3, 0, this.Width / 3, this.Height));
+                        break;
+                }
         }
 
 
