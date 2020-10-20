@@ -49,7 +49,7 @@ namespace Taki
         {
             return playersList[playerIndex];
         }
-        
+
         public ActivePlayer GetActivePlayer()
         {
             return (ActivePlayer)playersList[0];

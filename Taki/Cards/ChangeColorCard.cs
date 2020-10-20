@@ -11,7 +11,7 @@ namespace Taki.Cards
     {
         public override string Serialize()
         {
-            JSONCard card = new JSONCard("stchange_directionop", "", "");
+            JSONCard card = new JSONCard("change_color", "", "");
             string jsonString = JsonSerializer.Serialize(card);
             return jsonString;
         }
