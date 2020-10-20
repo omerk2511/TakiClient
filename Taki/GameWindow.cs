@@ -166,31 +166,26 @@ namespace Taki
         // card should contain null;
         public void AnimateUseCard(Player player, Card card)
         {
-            if (player is ActivePlayer)
+            // Update player's hand
+            int playerIndex = this.game.GetPlayerIndex(player);
+            switch (playerIndex)
             {
-                CardAnimation(card.GetResourceName(), false);
-            }
-            else
-            {
-                // Update player's hand
-                int playerIndex = this.game.GetPlayerIndex(player);
-                switch (playerIndex)
-                {
-                    case 1:
-                        this.Invalidate(new Rectangle(0, 0, this.Width / 3, this.Height));
-                        break;
-                    case 2:
-                        this.Invalidate(new Rectangle(0, 0, this.Width, this.Height / 4));
-                        break;
-                    case 3:
-                        this.Invalidate(new Rectangle((this.Width * 2) / 3, 0, this.Width / 3, this.Height));
-                        break;
-                }
+                case 0:
+                    this.Invalidate(new Rectangle(0, (this.Height * 2) / 3, this.Width, this.Height / 3));
+                    break;
+                case 1:
+                    this.Invalidate(new Rectangle(0, 0, this.Width / 3, this.Height));
+                    break;
+                case 2:
+                    this.Invalidate(new Rectangle(0, 0, this.Width, this.Height / 4));
+                    break;
+                case 3:
+                    this.Invalidate(new Rectangle((this.Width * 2) / 3, 0, this.Width / 3, this.Height));
+                    break;
             }
             // Add an card to the used cards stash
             RenderStashedCard(this.CreateGraphics(), card.GetResourceName(), usedCardsX, usedCardsY);
         }
-
 
         const int cardWidth = 100;
         const int cardHeight = 200;
@@ -221,12 +216,12 @@ namespace Taki
                     resourcesNames = this.game.GetPlayer(1).GetCardResources();
                     PaintHand(gfx, resourcesNames, -100, this.Height / 3, 90, 150);
                 }
-                if (shouldRender[1])
+                if (shouldRender[2])
                 {
                     resourcesNames = this.game.GetPlayer(2).GetCardResources();
                     PaintHand(gfx, resourcesNames, ((this.Width / 2) - 100), -150, -180, 150);
                 }
-                if (shouldRender[1])
+                if (shouldRender[3])
                 {
                     resourcesNames = this.game.GetPlayer(3).GetCardResources();
                     PaintHand(gfx, resourcesNames, this.Width, this.Height / 3, -90, 150);
