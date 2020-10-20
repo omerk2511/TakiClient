@@ -14,11 +14,11 @@ using System.Windows.Forms.VisualStyles;
 
 namespace Taki
 {
-    partial class Form1 : Form
+    partial class GameWindow : Form
     {
         private Game game;
     
-        public Form1(Game game)
+        public GameWindow(Game game)
         {
             InitializeComponent();
             this.game = game;
@@ -260,6 +260,11 @@ namespace Taki
         private string animationImageName;
         private bool animationDirection;
 
+        private void GameWindow_Load(object sender, EventArgs e)
+        {
+
+        }
+
         // Draw an card animation. The card image should be specified with cardImageName.
         // animationDirection should be true if the card animation needs to move from the deck
         // to the user hand, false if the card animation needs to move from the hand to used
@@ -309,7 +314,6 @@ namespace Taki
                     {
                         this.timer1.Enabled = false;
                         this.animationStarted = false;
-                        //this.Invalidate(new Rectangle(usedCardsX - 30, usedCardsY - 30, cardWidth + 60, cardHeight + 60));
                         this.Invalidate(new Rectangle(0, (this.Height * 2) / 3, this.Width, this.Height / 3));
                     }
                     else
