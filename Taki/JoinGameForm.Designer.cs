@@ -98,6 +98,7 @@
             // ErrorLabel
             // 
             this.ErrorLabel.AutoSize = true;
+            this.ErrorLabel.BackColor = System.Drawing.Color.Red;
             this.ErrorLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
             this.ErrorLabel.Location = new System.Drawing.Point(22, 219);
             this.ErrorLabel.Name = "ErrorLabel";

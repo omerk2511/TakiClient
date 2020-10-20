@@ -107,7 +107,6 @@ namespace Taki
             Card card = RemoveCard(cardIndex);
             string str = card.Serialize();
             return str;
-
         }
 
         public int GetCardAmountOfColor(Color color)
