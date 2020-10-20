@@ -186,6 +186,9 @@ namespace Taki
                         this.Invalidate(new Rectangle((this.Width * 2) / 3, 0, this.Width / 3, this.Height));
                         break;
                 }
+            }
+            // Add an card to the used cards stash
+            RenderStashedCard(this.CreateGraphics(), card.GetResourceName(), usedCardsX, usedCardsY);
         }
 
 
@@ -306,7 +309,7 @@ namespace Taki
                     {
                         this.timer1.Enabled = false;
                         this.animationStarted = false;
-                        this.Invalidate(new Rectangle(usedCardsX - 30, usedCardsY - 30, cardWidth + 60, cardHeight + 60));
+                        //this.Invalidate(new Rectangle(usedCardsX - 30, usedCardsY - 30, cardWidth + 60, cardHeight + 60));
                         this.Invalidate(new Rectangle(0, (this.Height * 2) / 3, this.Width, this.Height / 3));
                     }
                     else
