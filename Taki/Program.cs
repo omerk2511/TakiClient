@@ -22,18 +22,7 @@ namespace Taki
         {
             try
             {
-                Game game = new Game(4);
-                Player myplayer = game.GetPlayer(0);
-                if (myplayer is ActivePlayer)
-                {
-                    Tuple<int, List<Color>> t = ((ActivePlayer)myplayer).GetCommonColor();
-                    Console.WriteLine(t.Item1);
-                    foreach (Color color in t.Item2)
-                    {
-                        Console.WriteLine(color);
-                    }
-                }
-                
+                Game game = new Game(4);   
             }catch(ArgumentException e)
             {
                 Console.WriteLine(e.Message);
