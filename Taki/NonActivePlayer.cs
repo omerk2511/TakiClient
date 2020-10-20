@@ -10,11 +10,6 @@ namespace Taki
     class NonActivePlayer : Player
     {
         private int _cardCount;
-        public int cardCount
-        {
-            get { return _cardCount; }
-            set { _cardCount = value; }
-        }
 
         public NonActivePlayer(int cardCount)
         {
@@ -29,6 +24,21 @@ namespace Taki
         public void AddCard()
         {
             this._cardCount++;
+        }
+        
+        public override int GetCardAmount()
+        {
+            return this._cardCount;
+        }
+
+        public override List<string> GetCardResources()
+        {
+            List<string> lst = new List<string>(this._cardCount);
+            for(int i = 0; i < this._cardCount; i++)
+            {
+                lst.Add("back");
+            }
+            return lst;
         }
 
     }

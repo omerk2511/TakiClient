@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +16,7 @@ namespace Taki
             hand = new List<Card>();
         }
         
-        public ActivePlayer(JSONCard[] jsonCards)
+        public ActivePlayer(List<JSONCard> jsonCards)
         {
             hand = new List<Card>();
             foreach(JSONCard c in jsonCards)
@@ -69,12 +69,17 @@ namespace Taki
             hand.Add(c);
         }
 
+        public Card GetResourcesNames(int cardIndex)
+        {
+            return hand[cardIndex];
+        }
+        
         public Card GetCard(int cardIndex)
         {
             return hand[cardIndex];
         }
 
-        public int GetCardAmount()
+        public override int GetCardAmount()
         {
             return hand.Count;
         }
@@ -85,6 +90,16 @@ namespace Taki
             Card tempCard = hand[cardIndex];
             hand.RemoveAt(cardIndex);
             return tempCard;
+        }
+
+        public override List<string> GetCardResources()
+        {
+            List<string> lst = new List<string>(this.hand.Count);
+            foreach (Card c in this.hand)
+            {
+                lst.Add(c.GetResourceName());
+            }
+            return lst;
         }
 
         public string PlayCard(int cardIndex)
@@ -217,7 +232,5 @@ namespace Taki
             }
             return counter;     
         }
-
-        
     }
 }
