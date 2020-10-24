@@ -9,6 +9,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Numerics;
 using Taki.Cards;
+using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace Taki
 {
@@ -20,14 +22,6 @@ namespace Taki
         [STAThread]
         static void Main()
         {
-            try
-            {
-                Game game = new Game(4);   
-            }catch(ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new WelcomeForm());

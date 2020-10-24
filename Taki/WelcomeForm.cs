@@ -15,17 +15,6 @@ namespace Taki
     {
         public WelcomeForm()
         {
-            Game game;
-            try
-            {
-                game = new Game(4);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-                return;
-            }
-
             InitializeComponent();
         }
 

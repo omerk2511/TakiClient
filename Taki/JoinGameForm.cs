@@ -38,12 +38,24 @@ namespace Taki
                 this.ErrorLabel.Text = "";
                 try
                 {
-                    // Join the game with server
-                    Game game = new Game(4); //TODO: Replace this with a function that creates a game
-                    Form form = new GameWindow(game);
-                    form.FormClosing += delegate { Environment.Exit(0); };
-                    form.Show();
-                    this.Hide();
+                    JoinGameJSON json = new JoinGameJSON(gameID, playerName, password);
+                    Client client = new Client();
+                    client.SendJSON(json);
+                    dynamic jsonObj = client.RecvJSON();
+                    if(jsonObj.status == "success")
+                    {
+                        client.jwt = jsonObj.args.jwt;
+                        // Join the game with server
+                        Form form = new WaitGameForm(client);
+                        form.FormClosing += delegate { Environment.Exit(0); };
+                        form.Show();
+                        this.Hide();
+                    }
+                    else
+                    {
+                        Console.WriteLine(jsonObj.ToString());
+                    }
+                    
                 }
                 catch (TakiServerException exception)
                 {

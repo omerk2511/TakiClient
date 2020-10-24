@@ -11,7 +11,7 @@ namespace Taki
     {
         private int _cardCount;
 
-        public NonActivePlayer(int cardCount)
+        public NonActivePlayer(string name, int cardCount) : base(name)
         {
             this._cardCount = cardCount;
         }

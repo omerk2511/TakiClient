@@ -33,9 +33,14 @@ namespace Taki
                 this.ErrorLabel.Text = "";
                 try
                 {
+                    CreateGameJSON json = new CreateGameJSON(lobbyName, playerName, password);
+                    Client client = new Client();
+                    client.SendJSON(json);
+                    dynamic jsonObj = client.RecvJSON();
+                    client.jwt = jsonObj.args.jwt;
+
                     // Create the game with server
-                    Game game = new Game(4); //TODO: Replace this with a function that creates a game
-                    Form form = new GameWindow(game);
+                    Form form = new StartGameForm(client, jsonObj.args.game_id.ToString());
                     form.FormClosing += delegate { Environment.Exit(0); };
                     form.Show();
                     this.Hide();

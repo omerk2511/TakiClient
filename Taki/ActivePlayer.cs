@@ -11,12 +11,12 @@ namespace Taki
     {
         private List<Card> hand;
 
-        public ActivePlayer()
+        public ActivePlayer(string name) : base(name)
         {
             hand = new List<Card>();
         }
         
-        public ActivePlayer(List<JSONCard> jsonCards)
+        public ActivePlayer(string name, List<JSONCard> jsonCards) : base(name)
         {
             hand = new List<Card>();
             foreach(JSONCard c in jsonCards)

@@ -11,38 +11,26 @@ namespace Taki
     {
         private List<Player> playersList;
         public List<Card> usedCards;
+        public string jwt;
+        public int gameId;
 
-        // playersNum must be a number between 2 to 4
-        public Game(int playerNum)
+        public Game(string activePlayerName, string[] playerNames, int gameId)
         {
-            if (playerNum > 4 || playerNum < 2)
+            if (playerNames.Length > 3)  // TODO: check server's player list
             {
                 throw new ArgumentException();
             }
 
+            this.gameId = gameId;
+
             playersList = new List<Player>();
-
-            //##TEST
-            List<JSONCard> l = new List<JSONCard>();
-            for (int i = 0; i < 8; i++) {
-                l.Add(new JSONCard("number_card", "red", "1"));
-            }
-            playersList.Add(new ActivePlayer(l));
-            //##TEST
-
-            //playersList.Add(new ActivePlayer());
-
-
-            for (int i = 1; i < playerNum; i++)
+            playersList.Add(new ActivePlayer(activePlayerName));
+            for (int i = 1; i < playerNames.Length; i++)
             {
-                playersList.Add(new NonActivePlayer(8));
+                playersList.Add(new NonActivePlayer(playerNames[i], 8));
             }
 
             usedCards = new List<Card>();
-            for (int i = 0; i < 50; i++)
-            {
-                usedCards.Add(new NumberCard(1, Color.YELLOW));
-            }
         }
 
         public Player GetPlayer(int playerIndex)
