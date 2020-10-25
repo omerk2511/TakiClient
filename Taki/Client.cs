@@ -50,8 +50,8 @@ namespace Taki
                 byte[] stringToParse = new byte[4096];
                 int bytesRecieved = this.gameSocket.Receive(stringToParse);
 
-                Stack<int> jsonStack = new Stack<int>();
-
+                Stack<int> jsonCurlyBracesStack = new Stack<int>();
+                bool quotationMarkFlag = false;
                 for (int i = 0; i < bytesRecieved; i++)
                 {
                     if(stringToParse[i] == 0)
@@ -60,17 +60,21 @@ namespace Taki
                     }
                     int firstJsonIndex = 0;
                     int lastJsonIndex = 0;
-                    if ((char)(stringToParse[i]) == '{')
+                    if ((char)(stringToParse[i]) == '{' && !quotationMarkFlag)
                     {
-                        jsonStack.Push(i);
+                        jsonCurlyBracesStack.Push(i);
                     }
-                    else if ((char)(stringToParse[i]) == '}')
+                    else if ((char)(stringToParse[i]) == '}' && !quotationMarkFlag)
                     {
-                        firstJsonIndex = jsonStack.Pop();
+                        firstJsonIndex = jsonCurlyBracesStack.Pop();
                         lastJsonIndex = i;
                     }
+                    else if((char)(stringToParse[i]) == '\"' && (char)(stringToParse[i - 1]) != '\\')
+                    {
+                        quotationMarkFlag = !quotationMarkFlag;
+                    }
 
-                    if (jsonStack.Count == 0)
+                    if (jsonCurlyBracesStack.Count == 0)
                     {
                         try
                         {
