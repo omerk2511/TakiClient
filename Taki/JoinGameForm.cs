@@ -46,7 +46,14 @@ namespace Taki
                     {
                         client.jwt = jsonObj.args.jwt;
                         // Join the game with server
-                        Form form = new WaitGameForm(client);
+                        string[] names = new string[4];
+                        int num = 0;
+                        foreach (string member in jsonObj.args.players)
+                        {
+                            names[num] = member;
+                            num++;
+                        }
+                        Form form = new WaitGameForm(client,names);
                         form.FormClosing += delegate { Environment.Exit(0); };
                         form.Show();
                         this.Hide();

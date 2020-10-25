@@ -30,15 +30,18 @@
         {
             this.headerLabel = new System.Windows.Forms.Label();
             this.memeberLabel = new System.Windows.Forms.Label();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // headerLabel
             // 
             this.headerLabel.AutoSize = true;
             this.headerLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.headerLabel.Location = new System.Drawing.Point(136, 45);
+            this.headerLabel.Location = new System.Drawing.Point(181, 55);
+            this.headerLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.headerLabel.Name = "headerLabel";
-            this.headerLabel.Size = new System.Drawing.Size(530, 46);
+            this.headerLabel.Size = new System.Drawing.Size(663, 58);
             this.headerLabel.TabIndex = 14;
             this.headerLabel.Text = "Waiting for the host to start...";
             // 
@@ -46,21 +49,39 @@
             // 
             this.memeberLabel.AutoSize = true;
             this.memeberLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F);
-            this.memeberLabel.Location = new System.Drawing.Point(285, 128);
+            this.memeberLabel.Location = new System.Drawing.Point(380, 158);
+            this.memeberLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.memeberLabel.Name = "memeberLabel";
-            this.memeberLabel.Size = new System.Drawing.Size(230, 39);
+            this.memeberLabel.Size = new System.Drawing.Size(290, 52);
             this.memeberLabel.TabIndex = 15;
             this.memeberLabel.Text = "Members: 2/4";
             // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            // 
+            // listBox1
+            // 
+            this.listBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 31;
+            this.listBox1.Location = new System.Drawing.Point(12, 124);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(318, 221);
+            this.listBox1.TabIndex = 17;
+            // 
             // WaitGameForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 229);
+            this.ClientSize = new System.Drawing.Size(1067, 357);
+            this.Controls.Add(this.listBox1);
             this.Controls.Add(this.memeberLabel);
             this.Controls.Add(this.headerLabel);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "WaitGameForm";
             this.Text = "WaitGameForm";
+            this.Load += new System.EventHandler(this.WaitGameForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -70,5 +91,7 @@
 
         private System.Windows.Forms.Label headerLabel;
         private System.Windows.Forms.Label memeberLabel;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
