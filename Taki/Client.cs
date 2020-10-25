@@ -18,6 +18,7 @@ namespace Taki
         Socket gameSocket;
         public string jwt { get; set; }
 
+        private List<dynamic> jsonList = new List<dynamic>();  
 
         public Client()
         {
@@ -32,24 +33,73 @@ namespace Taki
             }
             catch (SocketException e)
             {
-                MessageBox.Show("Server is not reponding, please make sure the server is running or try again later.");
+                MessageBox.Show("Server is not responding, please make sure the server is running or try again later.");
             }
         }
 
         public void SendJSON(object jsonObj)
         {
             string json = JsonConvert.SerializeObject(jsonObj);
-            Console.WriteLine(json);
             this.gameSocket.Send(Encoding.ASCII.GetBytes(json));
         }
 
         public object RecvJSON() 
         {
-            byte[] jsonStr = new byte[1024];
-            this.gameSocket.Receive(jsonStr);
+            if (jsonList.Count == 0)
+            {
+                byte[] stringToParse = new byte[4096];
+                int bytesRecieved = this.gameSocket.Receive(stringToParse);
 
-            dynamic jsonObj = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(jsonStr));
-            return jsonObj;
+                Stack<int> jsonCurlyBracesStack = new Stack<int>();
+                bool quotationMarkFlag = false;
+                for (int i = 0; i < bytesRecieved; i++)
+                {
+                    if(stringToParse[i] == 0)
+                    {
+                        break;
+                    }
+                    int firstJsonIndex = 0;
+                    int lastJsonIndex = 0;
+                    if ((char)(stringToParse[i]) == '{' && !quotationMarkFlag)
+                    {
+                        jsonCurlyBracesStack.Push(i);
+                    }
+                    else if ((char)(stringToParse[i]) == '}' && !quotationMarkFlag)
+                    {
+                        firstJsonIndex = jsonCurlyBracesStack.Pop();
+                        lastJsonIndex = i;
+                    }
+                    else if((char)(stringToParse[i]) == '\"' && (char)(stringToParse[i - 1]) != '\\')
+                    {
+                        quotationMarkFlag = !quotationMarkFlag;
+                    }
+
+                    if (jsonCurlyBracesStack.Count == 0)
+                    {
+                        try
+                        {
+                            byte[] jsonStr = stringToParse.Skip(firstJsonIndex).Take(lastJsonIndex - firstJsonIndex + 1).ToArray();
+                            jsonList.Add(JsonConvert.DeserializeObject(Encoding.ASCII.GetString(jsonStr)));
+                        }
+                        catch (Newtonsoft.Json.JsonException e)
+                        {
+                            throw new TakiServerException("Cannot convert server data to json object." + e.Message);
+                        }
+                    }
+                }
+            }
+
+            if(jsonList.Count != 0)
+            {
+                dynamic jsonObj = jsonList[0];
+                jsonList.RemoveAt(0);
+                Console.WriteLine(jsonObj);
+                return jsonObj;
+            }
+            else
+            {
+                throw new TakiServerException("Cannot convert server data to json object");
+            }
         }
 
     }
