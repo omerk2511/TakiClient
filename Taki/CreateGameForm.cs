@@ -40,7 +40,7 @@ namespace Taki
                     client.jwt = jsonObj.args.jwt;
 
                     // Create the game with server
-                    Form form = new StartGameForm(client, jsonObj.args.game_id.ToString());
+                    Form form = new StartGameForm(client, jsonObj.args.game_id.ToString(), playerName);
                     form.FormClosing += delegate { Environment.Exit(0); };
                     form.Show();
                     this.Hide();
