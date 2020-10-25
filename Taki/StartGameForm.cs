@@ -16,7 +16,7 @@ namespace Taki
         private Client client;
         private string name;
 
-        public StartGameForm(Client client, string gameID,string name)
+        public StartGameForm(Client client, string gameID, string name)
         {
             InitializeComponent();
             this.client = client;
