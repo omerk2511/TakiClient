@@ -53,7 +53,7 @@ namespace Taki
                             names[num] = member;
                             num++;
                         }
-                        Form form = new WaitGameForm(client,names);
+                        Form form = new WaitGameForm(client, names);
                         form.FormClosing += delegate { Environment.Exit(0); };
                         form.Show();
                         this.Hide();
