@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,7 @@ namespace Taki
             hand.Add(card);
         }
 
-        void AddJSONCard(JSONCard jsonCard)
+        Card AddJSONCard(JSONCard jsonCard)
         {
             Card c = null;
             string cardValue = jsonCard.value;
@@ -67,6 +68,7 @@ namespace Taki
                     break;
             }
             hand.Add(c);
+            return c;
         }
 
         public Card GetResourcesNames(int cardIndex)
@@ -102,11 +104,38 @@ namespace Taki
             return lst;
         }
 
-        public string PlayCard(int cardIndex)
+        public Card PlayCard(int cardIndex, Client client)
         {
             Card card = RemoveCard(cardIndex);
-            string str = card.Serialize();
-            return str;
+            JSONCard jsonCard = card.Serialize();
+            JSONCard[] jsonCards = new JSONCard[1];
+            jsonCards[0] = jsonCard;
+            PlayCardJSON doMoveJson = new PlayCardJSON(client.jwt, jsonCards);
+            client.SendJSON(doMoveJson);
+            return card;
+        }
+        
+        public List<Card> DrawCard(Client client)
+        {
+            TakeCardsJSON doMoveJson = new TakeCardsJSON(client.jwt);
+            client.SendJSON(doMoveJson);
+            dynamic cardsTakenJSON = client.RecvJSON(true);
+            if(cardsTakenJSON.status == "success")
+            {
+                if(((JToken)cardsTakenJSON)["args"].Type == JTokenType.Null)
+                {
+                    cardsTakenJSON = client.RecvJSON(true);
+                }
+                List<JSONCard> jsonCardsTaken = ((JArray)cardsTakenJSON.args.cards).ToObject<List<JSONCard>>();
+                List<Card> cardsTaken = new List<Card>();
+                foreach(JSONCard card in jsonCardsTaken)
+                {
+                    cardsTaken.Add(this.AddJSONCard(card));
+                }
+                return cardsTaken;
+            }
+            Console.WriteLine("Error1: " + cardsTakenJSON.ToString());
+            return null;
         }
 
         public int GetCardAmountOfColor(Color color)
@@ -119,7 +148,6 @@ namespace Taki
                     if (((ColorCard)card).Color == color)
                         counter++;
                 }
-                    
             }
             return counter;
         }

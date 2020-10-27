@@ -30,7 +30,6 @@
         {
             this.headerLabel = new System.Windows.Forms.Label();
             this.memeberLabel = new System.Windows.Forms.Label();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
@@ -55,10 +54,6 @@
             this.memeberLabel.Size = new System.Drawing.Size(290, 52);
             this.memeberLabel.TabIndex = 15;
             this.memeberLabel.Text = "Members: 2/4";
-            // 
-            // backgroundWorker1
-            // 
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             // 
             // listBox1
             // 
@@ -91,7 +86,6 @@
 
         private System.Windows.Forms.Label headerLabel;
         private System.Windows.Forms.Label memeberLabel;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.ListBox listBox1;
     }
 }

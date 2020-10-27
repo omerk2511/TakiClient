@@ -11,20 +11,15 @@ namespace Taki
     {
         private List<Player> playersList;
         public List<Card> usedCards;
-        public string jwt;
-        public int gameId;
 
-        public Game(string activePlayerName, string[] playerNames, int gameId)
+        public Game(string[] playerNames, List<JSONCard> activePlayerCards)
         {
-            if (playerNames.Length > 3)  // TODO: check server's player list
+            if (playerNames.Length != 4) 
             {
                 throw new ArgumentException();
             }
-
-            this.gameId = gameId;
-
             playersList = new List<Player>();
-            playersList.Add(new ActivePlayer(activePlayerName));
+            playersList.Add(new ActivePlayer(playerNames[0], activePlayerCards));
             for (int i = 1; i < playerNames.Length; i++)
             {
                 playersList.Add(new NonActivePlayer(playerNames[i], 8));
@@ -36,6 +31,11 @@ namespace Taki
         public Player GetPlayer(int playerIndex)
         {
             return playersList[playerIndex];
+        }
+
+        public Player GetPlayerByName(string playerName)
+        {
+            return this.playersList.Find(p => p.name == playerName);
         }
 
         public ActivePlayer GetActivePlayer()
@@ -50,14 +50,7 @@ namespace Taki
         
         public int GetPlayerIndex(Player player)
         {
-            for(int i = 0; i < playersList.Count; i++)
-            {
-                if (playersList[i].Equals(player))
-                {
-                    return i;
-                }
-            }
-            return -1;
+            return this.playersList.FindIndex(p => p == player);
         }
     }
 }

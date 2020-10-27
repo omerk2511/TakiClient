@@ -42,14 +42,33 @@ namespace Taki
             string json = JsonConvert.SerializeObject(jsonObj);
             this.gameSocket.Send(Encoding.ASCII.GetBytes(json));
         }
+        
+        // Add JWT to the args of this object and then send it
+        public void SendJSONWithJWT(object jsonObj)
+        {
+            string json = JsonConvert.SerializeObject(jsonObj);
+            this.gameSocket.Send(Encoding.ASCII.GetBytes(json));
+        }
 
-        public object RecvJSON() 
+        public object RecvJSON(bool blocking) 
         {
             if (jsonList.Count == 0)
             {
                 byte[] stringToParse = new byte[4096];
-                int bytesRecieved = this.gameSocket.Receive(stringToParse);
-
+                this.gameSocket.Blocking = blocking;
+                int bytesRecieved;
+                try
+                {
+                    bytesRecieved = this.gameSocket.Receive(stringToParse);
+                    if (bytesRecieved == 0)
+                    {
+                        return null;
+                    }
+                }
+                catch (SocketException e)
+                {
+                    return null;
+                }
                 Stack<int> jsonCurlyBracesStack = new Stack<int>();
                 bool quotationMarkFlag = false;
                 for (int i = 0; i < bytesRecieved; i++)
@@ -93,7 +112,8 @@ namespace Taki
             {
                 dynamic jsonObj = jsonList[0];
                 jsonList.RemoveAt(0);
-                Console.WriteLine(jsonObj);
+                Console.WriteLine("Reieved: " + jsonObj.ToString());
+
                 return jsonObj;
             }
             else
@@ -101,6 +121,5 @@ namespace Taki
                 throw new TakiServerException("Cannot convert server data to json object");
             }
         }
-
     }
 }

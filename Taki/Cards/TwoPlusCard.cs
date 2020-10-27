@@ -11,16 +11,14 @@ namespace Taki
     {
         public TwoPlusCard(Color color) : base(color) { }
 
-        public override string Serialize()
+        public override JSONCard Serialize()
         {
-            JSONCard card = new JSONCard("plus_2", Color.ToString().ToLower(), "");
-            string jsonString = JsonSerializer.Serialize(card);
-            return jsonString;
+            return new JSONCard("plus_2", Color.ToString().ToLower(), "");
         }
 
         public override string GetResourceName()
         {
-            return ("2" + base.GetColorName());
+            return ("_2" + base.GetColorName());
         }
 
     }

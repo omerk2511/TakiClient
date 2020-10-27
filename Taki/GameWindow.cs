@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,11 +18,13 @@ namespace Taki
     partial class GameWindow : Form
     {
         private Game game;
+        private Client client;
     
-        public GameWindow(Game game)
+        public GameWindow(Game game, Client client)
         {
             InitializeComponent();
             this.game = game;
+            this.client = client;
         }
 
         // Get a rectangle bounds from a PointF array.
@@ -192,6 +195,7 @@ namespace Taki
         int deckX, deckY;
         int usedCardsX, usedCardsY;
 
+        bool firstPaint = true;
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             Graphics gfx = e.Graphics;
@@ -237,7 +241,12 @@ namespace Taki
                 // Draw the used cards
                 usedCardsX = (this.Width - cardWidth) / 2 + cardWidth;
                 usedCardsY = this.Height / 2 - cardHeight;
-                for (int i = this.game.usedCards.Count - 5; i < this.game.usedCards.Count; i++)
+                int off = 5;
+                if(this.game.usedCards.Count < 5)
+                {
+                    off = this.game.usedCards.Count;
+                }
+                for (int i = this.game.usedCards.Count - off; i < this.game.usedCards.Count; i++)
                 {
                     RenderStashedCard(gfx, this.game.usedCards[i].GetResourceName(), usedCardsX, usedCardsY);
                 }
@@ -246,6 +255,12 @@ namespace Taki
                 Bitmap bmp = (Bitmap)Taki.Properties.Resources.ResourceManager.
                   GetObject(this.animationImageName, Taki.Properties.Resources.Culture);
                 gfx.DrawImage(bmp, currentAnimationPoint.X, currentAnimationPoint.Y, cardWidth, cardHeight);
+            }
+            if (firstPaint)
+            {
+                Thread connectionThread = new Thread(HandleConnection);
+                connectionThread.Start();
+                firstPaint = false;
             }
         }
 
@@ -257,7 +272,59 @@ namespace Taki
 
         private void GameWindow_Load(object sender, EventArgs e)
         {
+            
+        }
 
+        private void HandleConnection()
+        {
+            while (true)
+            {
+                dynamic json = this.client.RecvJSON(true);
+                Dictionary<string, object> values = ((JObject)json).ToObject<Dictionary<string, object>>();
+                if (values.ContainsKey("status"))
+                {
+                    if(json.status == "success")
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error" + json.ToString());
+                    }
+                }
+                if (json.code == "update_turn")
+                {
+                    string currentPlayerName = json.args.current_player.ToString();
+                    Player currentPlayer = this.game.GetPlayerByName(currentPlayerName);
+                    if (currentPlayer is ActivePlayer)
+                    {
+                        //Card cardPlayed = this.game.GetActivePlayer().PlayCard(0, this.client);
+                        List<Card> cardDrawn = this.game.GetActivePlayer().DrawCard(client);
+                        foreach(Card card in cardDrawn)
+                        {
+                            AnimateDrawCard(game.GetActivePlayer(), card);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Its " + currentPlayer.name + "'s turn.");
+                    }
+                }
+                else if(json.code == "move_done")
+                {
+                    //dynamic moveDoneJson = this.client.RecvJSON(true);
+                    if (json.args.type == "cards_taken")
+                    {
+                        Player currentPlayer = this.game.GetPlayerByName(json.args.player_name.ToString());
+
+                        for (int i = 0; i < json.args.amount.ToObject<int>(); i++)
+                        {
+                            AnimateDrawCard(currentPlayer, null);
+                        }
+                    }
+                }
+
+            }
         }
 
         // Draw an card animation. The card image should be specified with cardImageName.

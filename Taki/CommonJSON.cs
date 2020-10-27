@@ -79,4 +79,50 @@ namespace Taki
             this.jwt = jwt;
         }
     }
+    
+    class PlayCardJSON
+    {
+        public string code { get; set; }
+        public PlayCardJSONArgs args { get; set; }
+
+        public PlayCardJSON(string jwt, JSONCard[] cards)
+        {
+            this.code = "place_cards";
+            this.args = new PlayCardJSONArgs(jwt, cards);
+        }
+    }    
+    
+    class PlayCardJSONArgs
+    {
+        public JSONCard[] cards { get; set; }
+        public string jwt { get; set; }
+
+        public PlayCardJSONArgs(string jwt, JSONCard[] cards)
+        {
+            this.jwt = jwt;
+            this.cards = cards;
+        }
+    }
+    
+    class TakeCardsJSON
+    {
+        public string code { get; set; }
+        public TakeCardsJSONArgs args { get; set; }
+
+        public TakeCardsJSON(string jwt)
+        {
+            this.code = "take_cards";
+            this.args = new TakeCardsJSONArgs(jwt);
+        }
+    }    
+    
+    class TakeCardsJSONArgs
+    {
+        public string jwt { get; set; }
+
+        public TakeCardsJSONArgs(string jwt)
+        {
+            this.jwt = jwt;
+        }
+    }
 }

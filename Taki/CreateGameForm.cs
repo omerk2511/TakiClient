@@ -36,7 +36,7 @@ namespace Taki
                     CreateGameJSON json = new CreateGameJSON(lobbyName, playerName, password);
                     Client client = new Client();
                     client.SendJSON(json);
-                    dynamic jsonObj = client.RecvJSON();
+                    dynamic jsonObj = client.RecvJSON(true);
                     client.jwt = jsonObj.args.jwt;
 
                     // Create the game with server

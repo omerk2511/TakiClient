@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -32,6 +33,9 @@ namespace Taki
             if (password == "" || gameID == "")
             {
                 this.ErrorLabel.Text = "One of the values you entered was empty.";
+            }else if(!int.TryParse(gameID, out _))
+            {
+                this.ErrorLabel.Text = "Game ID must be a number from 0 to 10000";
             }
             else
             {
@@ -41,19 +45,13 @@ namespace Taki
                     JoinGameJSON json = new JoinGameJSON(gameID, playerName, password);
                     Client client = new Client();
                     client.SendJSON(json);
-                    dynamic jsonObj = client.RecvJSON();
+                    dynamic jsonObj = client.RecvJSON(true);
                     if(jsonObj.status == "success")
                     {
                         client.jwt = jsonObj.args.jwt;
+
                         // Join the game with server
-                        string[] names = new string[4];
-                        int num = 0;
-                        foreach (string member in jsonObj.args.players)
-                        {
-                            names[num] = member;
-                            num++;
-                        }
-                        Form form = new WaitGameForm(client, names);
+                        Form form = new WaitGameForm(client, ((JArray)jsonObj.args.players).ToObject<List<string>>());
                         form.FormClosing += delegate { Environment.Exit(0); };
                         form.Show();
                         this.Hide();
