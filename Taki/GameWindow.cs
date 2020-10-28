@@ -299,6 +299,7 @@ namespace Taki
                     if (currentPlayer is ActivePlayer)
                     {
                         //Card cardPlayed = this.game.GetActivePlayer().PlayCard(0, this.client);
+                        Thread.Sleep(3000);
                         List<Card> cardDrawn = this.game.GetActivePlayer().DrawCard(client);
                         foreach(Card card in cardDrawn)
                         {

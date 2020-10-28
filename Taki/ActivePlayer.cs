@@ -119,23 +119,25 @@ namespace Taki
         {
             TakeCardsJSON doMoveJson = new TakeCardsJSON(client.jwt);
             client.SendJSON(doMoveJson);
-            dynamic cardsTakenJSON = client.RecvJSON(true);
-            if(cardsTakenJSON.status == "success")
+
+            dynamic cardsTakenJSON;
+            do
             {
-                if(((JToken)cardsTakenJSON)["args"].Type == JTokenType.Null)
-                {
-                    cardsTakenJSON = client.RecvJSON(true);
-                }
-                List<JSONCard> jsonCardsTaken = ((JArray)cardsTakenJSON.args.cards).ToObject<List<JSONCard>>();
-                List<Card> cardsTaken = new List<Card>();
-                foreach(JSONCard card in jsonCardsTaken)
-                {
-                    cardsTaken.Add(this.AddJSONCard(card));
-                }
-                return cardsTaken;
+                cardsTakenJSON = client.RecvJSON(true);
             }
-            Console.WriteLine("Error1: " + cardsTakenJSON.ToString());
-            return null;
+            while (cardsTakenJSON.status != "success");
+
+            if(((JToken)cardsTakenJSON)["args"].Type == JTokenType.Null)
+            {
+                cardsTakenJSON = client.RecvJSON(true);
+            }
+            List<JSONCard> jsonCardsTaken = ((JArray)cardsTakenJSON.args.cards).ToObject<List<JSONCard>>();
+            List<Card> cardsTaken = new List<Card>();
+            foreach(JSONCard card in jsonCardsTaken)
+            {
+                cardsTaken.Add(this.AddJSONCard(card));
+            }
+            return cardsTaken;
         }
 
         public int GetCardAmountOfColor(Color color)

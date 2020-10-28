@@ -112,7 +112,7 @@ namespace Taki
             {
                 dynamic jsonObj = jsonList[0];
                 jsonList.RemoveAt(0);
-                Console.WriteLine("Reieved: " + jsonObj.ToString());
+                Console.WriteLine("Recieved: " + jsonObj.ToString());
 
                 return jsonObj;
             }
