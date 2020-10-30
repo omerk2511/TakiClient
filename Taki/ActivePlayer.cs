@@ -121,16 +121,19 @@ namespace Taki
             client.SendJSON(doMoveJson);
 
             dynamic cardsTakenJSON;
-            do
+            while (true)
             {
                 cardsTakenJSON = client.RecvJSON(true);
+                if (cardsTakenJSON.status == "success")
+                {
+                    if (((JToken)cardsTakenJSON)["args"].Type != JTokenType.Null)
+                    {
+                        break;
+                    }
+                }
             }
-            while (cardsTakenJSON.status != "success");
 
-            if(((JToken)cardsTakenJSON)["args"].Type == JTokenType.Null)
-            {
-                cardsTakenJSON = client.RecvJSON(true);
-            }
+
             List<JSONCard> jsonCardsTaken = ((JArray)cardsTakenJSON.args.cards).ToObject<List<JSONCard>>();
             List<Card> cardsTaken = new List<Card>();
             foreach(JSONCard card in jsonCardsTaken)

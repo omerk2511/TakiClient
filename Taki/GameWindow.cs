@@ -19,12 +19,17 @@ namespace Taki
     {
         private Game game;
         private Client client;
-    
+        private System.Timers.Timer timer;
+
         public GameWindow(Game game, Client client)
         {
             InitializeComponent();
             this.game = game;
             this.client = client;
+
+            this.timer = new System.Timers.Timer(80);
+            this.timer.Enabled = false;
+            this.timer.Elapsed += new System.Timers.ElapsedEventHandler(timer1_Tick);
         }
 
         // Get a rectangle bounds from a PointF array.
@@ -199,6 +204,7 @@ namespace Taki
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             Graphics gfx = e.Graphics;
+            //Console.WriteLine(animationStarted);
             if (!animationStarted)
             {
                 gfx.Clear(this.BackColor);
@@ -298,12 +304,13 @@ namespace Taki
                     Player currentPlayer = this.game.GetPlayerByName(currentPlayerName);
                     if (currentPlayer is ActivePlayer)
                     {
+                        Console.WriteLine("Its your turn.");
                         //Card cardPlayed = this.game.GetActivePlayer().PlayCard(0, this.client);
                         Thread.Sleep(3000);
                         List<Card> cardDrawn = this.game.GetActivePlayer().DrawCard(client);
                         foreach(Card card in cardDrawn)
                         {
-                            AnimateDrawCard(game.GetActivePlayer(), card);
+                            AnimateDrawCard(currentPlayer, card);
                         }
                     }
                     else
@@ -317,7 +324,10 @@ namespace Taki
                     if (json.args.type == "cards_taken")
                     {
                         Player currentPlayer = this.game.GetPlayerByName(json.args.player_name.ToString());
-
+                        if(currentPlayer is NonActivePlayer)
+                        {
+                            ((NonActivePlayer)currentPlayer).AddCards(json.args.amount.ToObject<int>());
+                        }
                         for (int i = 0; i < json.args.amount.ToObject<int>(); i++)
                         {
                             AnimateDrawCard(currentPlayer, null);
@@ -346,8 +356,7 @@ namespace Taki
             
             this.animationStarted = true;
             this.animationImageName = cardImageName;
-            this.timer1.Enabled = true;
-
+            this.timer.Start();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -359,10 +368,11 @@ namespace Taki
                 if (this.animationDirection)
                 {
                     currentAnimationPoint.Y += 10;
+
                     if (currentAnimationPoint.Y + cardHeight + 100 > this.Height)
                     {
-                        this.timer1.Enabled = false;
                         this.animationStarted = false;
+                        this.timer.Stop();
                         this.Invalidate(new Rectangle(0, (this.Height * 2) / 3, this.Width, this.Height / 3));
                     }
                     else
@@ -375,7 +385,7 @@ namespace Taki
                     currentAnimationPoint.Y -= 10;
                     if (currentAnimationPoint.Y < deckY)
                     {
-                        this.timer1.Enabled = false;
+                        this.timer.Stop();
                         this.animationStarted = false;
                         this.Invalidate(new Rectangle(0, (this.Height * 2) / 3, this.Width, this.Height / 3));
                     }

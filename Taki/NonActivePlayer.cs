@@ -16,14 +16,14 @@ namespace Taki
             this._cardCount = cardCount;
         }
 
-        public void RemoveCard()
+        public void RemoveCards(int num)
         {
-            this._cardCount--;
+            this._cardCount -= 1;
         }
 
-        public void AddCard()
+        public void AddCards(int num)
         {
-            this._cardCount++;
+            this._cardCount += num;
         }
         
         public override int GetCardAmount()
