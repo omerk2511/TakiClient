@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Taki.Cards;
 
 namespace Taki
 {
@@ -19,7 +20,7 @@ namespace Taki
                 throw new ArgumentException();
             }
             playersList = new List<Player>();
-            playersList.Add(new ActivePlayer(playerNames[0], activePlayerCards));
+            playersList.Add(new ActivePlayer(playerNames[0], activePlayerCards,this));
             for (int i = 1; i < playerNames.Length; i++)
             {
                 playersList.Add(new NonActivePlayer(playerNames[i], 8));
@@ -51,6 +52,45 @@ namespace Taki
         public int GetPlayerIndex(Player player)
         {
             return this.playersList.FindIndex(p => p == player);
+        }
+        public Card ConvertJsonCardToCard(JSONCard jsonCard)
+        {
+            Card c = null;
+            string cardValue = jsonCard.value;
+            Color cardColor = Color.UNDEFINED;
+            if (jsonCard.color != "")
+            {
+                cardColor = (Color)Enum.Parse(typeof(Color), jsonCard.color, true);
+            }
+            switch (jsonCard.type)
+            {
+                case "number_card":
+                    c = new NumberCard(int.Parse(cardValue), cardColor);
+                    break;
+                case "plus":
+                    c = new PlusCard(cardColor);
+                    break;
+                case "plus_2":
+                    c = new TwoPlusCard(cardColor);
+                    break;
+                case "stop":
+                    c = new StopCard(cardColor);
+                    break;
+                case "change_direction":
+                    c = new ChangeDirectionCard(cardColor);
+                    break;
+                case "change_color":
+                    c = new ChangeColorCard();
+                    break;
+                case "taki":
+                    c = new TakiCard(cardColor);
+                    break;
+                case "super_taki":
+                    c = new SuperTakiCard();
+                    break;
+               
+            }
+            return c;
         }
     }
 }

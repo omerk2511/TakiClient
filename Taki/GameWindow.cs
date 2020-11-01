@@ -148,7 +148,7 @@ namespace Taki
         {
             if(player is ActivePlayer)
             {
-                CardAnimation(card.GetResourceName(), true);
+                CardAnimation(card.GetResourceName(), false);
             }
             else
             {
@@ -304,8 +304,13 @@ namespace Taki
                     Player currentPlayer = this.game.GetPlayerByName(currentPlayerName);
                     if (currentPlayer is ActivePlayer)
                     {
-                        Console.WriteLine("Its your turn.");
-                        //Card cardPlayed = this.game.GetActivePlayer().PlayCard(0, this.client);
+                        //Console.WriteLine("Its your turn.");
+                        //List<int> indexes = new List<int>();
+                        //List<Card> cardPlayed = this.game.GetActivePlayer().PlayCard(indexes, this.client);
+                        //foreach (Card card in cardPlayed)
+                        //{
+                        //    AnimateUseCard(currentPlayer, card);
+                        //}
                         Thread.Sleep(3000);
                         List<Card> cardDrawn = this.game.GetActivePlayer().DrawCard(client);
                         foreach(Card card in cardDrawn)
@@ -331,6 +336,20 @@ namespace Taki
                         for (int i = 0; i < json.args.amount.ToObject<int>(); i++)
                         {
                             AnimateDrawCard(currentPlayer, null);
+                        }
+                    }
+                    else if (json.args.type == "cards_placed")
+                    {
+                        Player currentPlayer = this.game.GetPlayerByName(json.args.player_name.ToString());
+                        List<JSONCard> used = ((JArray)json.args.cards).ToObject<List<JSONCard>>();
+                        if (currentPlayer is NonActivePlayer)
+                        {
+                            ((NonActivePlayer)currentPlayer).RemoveCards(used.Count);
+                        }
+                        foreach( JSONCard card in used)
+                        {
+                            game.usedCards.Add(game.ConvertJsonCardToCard(card));
+                            AnimateUseCard(currentPlayer, game.ConvertJsonCardToCard(card));
                         }
                     }
                 }
