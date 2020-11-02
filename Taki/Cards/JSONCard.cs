@@ -10,14 +10,13 @@ namespace Taki
     {
         public string type { get; set; }
         public string color { get; set; }
-        public string value { get; set; }
+        public dynamic value { get; set; }
         
-        public JSONCard(string type, string color, string value)
+        public JSONCard(string type, string color, dynamic value)
         {
             this.type = type;
             this.color = color;
             this.value = value;
         }
-
     }
 }

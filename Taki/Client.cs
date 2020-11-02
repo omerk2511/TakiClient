@@ -22,6 +22,7 @@ namespace Taki
 
         public Client()
         {
+            
             try
             {
                 IPAddress ipAddress = new IPAddress(serverIp);
@@ -40,6 +41,7 @@ namespace Taki
         public void SendJSON(object jsonObj)
         {
             string json = JsonConvert.SerializeObject(jsonObj);
+            Console.WriteLine("send "+json);
             this.gameSocket.Send(Encoding.ASCII.GetBytes(json));
         }
         
@@ -49,6 +51,7 @@ namespace Taki
             string json = JsonConvert.SerializeObject(jsonObj);
             this.gameSocket.Send(Encoding.ASCII.GetBytes(json));
         }
+        
 
         public object RecvJSON(bool blocking) 
         {

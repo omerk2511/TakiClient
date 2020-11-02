@@ -11,33 +11,68 @@ namespace Taki
     class ActivePlayer : Player
     {
         private List<Card> hand;
-        private Game game;
 
-        public ActivePlayer(string name, Game game2) : base(name)
+        public ActivePlayer(string name) : base(name)
         {
             hand = new List<Card>();
-            game = game2;
         }
         
-        public ActivePlayer(string name, List<JSONCard> jsonCards,Game game2) : base(name)
+        public ActivePlayer(string name, List<JSONCard> jsonCards) : base(name)
         {
             hand = new List<Card>();
             foreach(JSONCard c in jsonCards)
             {
                 this.AddJSONCard(c);
             }
-            game = game2;
         }
 
         public void AddCard(Card card)
         {
             hand.Add(card);
         }
+        public Card ConvertJsonCardToCard(JSONCard jsonCard)
+        {
+            Card c = null;
+            dynamic cardValue = jsonCard.value;
+            Color cardColor = Color.UNDEFINED;
+            if (jsonCard.color != "")
+            {
+                cardColor = (Color)Enum.Parse(typeof(Color), jsonCard.color, true);
+            }
+            switch (jsonCard.type)
+            {
+                case "number_card":
+                    c = new NumberCard(Convert.ToInt32(cardValue), cardColor);
+                    break;
+                case "plus":
+                    c = new PlusCard(cardColor);
+                    break;
+                case "plus_2":
+                    c = new TwoPlusCard(cardColor);
+                    break;
+                case "stop":
+                    c = new StopCard(cardColor);
+                    break;
+                case "change_direction":
+                    c = new ChangeDirectionCard(cardColor);
+                    break;
+                case "change_color":
+                    c = new ChangeColorCard();
+                    break;
+                case "taki":
+                    c = new TakiCard(cardColor);
+                    break;
+                case "super_taki":
+                    c = new SuperTakiCard();
+                    break;
 
+            }
+            return c;
+        }
         Card AddJSONCard(JSONCard jsonCard)
         {
             Card c = null;
-            game.ConvertJsonCardToCard(jsonCard);
+            c = ConvertJsonCardToCard(jsonCard);
             hand.Add(c);
             return c;
         }
@@ -79,14 +114,11 @@ namespace Taki
         {
             List<Card> cards = new List<Card>();
             JSONCard[] jsonCards = new JSONCard[cardIndexes.Count];
-            int place = 0;
-            foreach (int index in cardIndexes)
+            for (int i = 0; i < jsonCards.Length; i++)
             {
-                Card card = RemoveCard(index);
-                game.usedCards.Add(card);
+                Card card = RemoveCard(cardIndexes[i]);
                 JSONCard jsonCard = card.Serialize();
-                jsonCards[place] = jsonCard;
-                place++;
+                jsonCards[i] = jsonCard;
                 cards.Add(card);
             }
             PlayCardJSON doMoveJson = new PlayCardJSON(client.jwt, jsonCards);
