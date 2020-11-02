@@ -33,7 +33,7 @@ namespace Taki
 
         public override JSONCard Serialize()
         {
-            return new JSONCard("number_card", Color.ToString().ToLower(), Number.ToString());
+            return new JSONCard("number_card", Color.ToString().ToLower(), Number);
         }
 
         public override string GetResourceName()

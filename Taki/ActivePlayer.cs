@@ -30,11 +30,10 @@ namespace Taki
         {
             hand.Add(card);
         }
-
-        Card AddJSONCard(JSONCard jsonCard)
+        public Card ConvertJsonCardToCard(JSONCard jsonCard)
         {
             Card c = null;
-            string cardValue = jsonCard.value;
+            dynamic cardValue = jsonCard.value;
             Color cardColor = Color.UNDEFINED;
             if (jsonCard.color != "")
             {
@@ -43,7 +42,7 @@ namespace Taki
             switch (jsonCard.type)
             {
                 case "number_card":
-                    c = new NumberCard(int.Parse(cardValue), cardColor);
+                    c = new NumberCard(Convert.ToInt32(cardValue), cardColor);
                     break;
                 case "plus":
                     c = new PlusCard(cardColor);
@@ -66,7 +65,14 @@ namespace Taki
                 case "super_taki":
                     c = new SuperTakiCard();
                     break;
+
             }
+            return c;
+        }
+        Card AddJSONCard(JSONCard jsonCard)
+        {
+            Card c = null;
+            c = ConvertJsonCardToCard(jsonCard);
             hand.Add(c);
             return c;
         }
@@ -104,15 +110,21 @@ namespace Taki
             return lst;
         }
 
-        public Card PlayCard(int cardIndex, Client client)
+        public List<Card> PlayCard(List<int> cardIndexes, Client client)
         {
-            Card card = RemoveCard(cardIndex);
-            JSONCard jsonCard = card.Serialize();
-            JSONCard[] jsonCards = new JSONCard[1];
-            jsonCards[0] = jsonCard;
+            List<Card> cards = new List<Card>();
+            JSONCard[] jsonCards = new JSONCard[cardIndexes.Count];
+            for (int i = 0; i < jsonCards.Length; i++)
+            {
+                Card card = RemoveCard(cardIndexes[i]);
+                JSONCard jsonCard = card.Serialize();
+                jsonCards[i] = jsonCard;
+                cards.Add(card);
+            }
             PlayCardJSON doMoveJson = new PlayCardJSON(client.jwt, jsonCards);
             client.SendJSON(doMoveJson);
-            return card;
+            return cards;
+
         }
         
         public List<Card> DrawCard(Client client)

@@ -340,13 +340,14 @@ namespace Taki
                     if (currentPlayer is ActivePlayer)
                     {
                         Console.WriteLine("Its your turn.");
-                        //Card cardPlayed = this.game.GetActivePlayer().PlayCard(0, this.client);
+                        // Make a turn: Draw or use card with ActivePlayer.PlayCard() or ActivePlayer.DrawCard(), then animate 
+                        // the turn using AnimateDrawCard() or AnimateUseCard()
+                        
+                        
+                        
+                        
+                        
                         Thread.Sleep(7000);
-                        List<Card> cardDrawn = this.game.GetActivePlayer().DrawCard(client);
-                        foreach (Card card in cardDrawn)
-                        {
-                            AnimateDrawCard(currentPlayer, card);
-                        }
                     }
                     else
                     {
@@ -366,6 +367,20 @@ namespace Taki
                         for (int i = 0; i < json.args.amount.ToObject<int>(); i++)
                         {
                             AnimateDrawCard(currentPlayer, null);
+                        }
+                    }
+                    else if (json.args.type == "cards_placed")
+                    {
+                        Player currentPlayer = this.game.GetPlayerByName(json.args.player_name.ToString());
+                        List<JSONCard> used = ((JArray)json.args.cards).ToObject<List<JSONCard>>();
+                        if (currentPlayer is NonActivePlayer)
+                        {
+                            ((NonActivePlayer)currentPlayer).RemoveCards(used.Count);
+                        }
+                        foreach( JSONCard card in used)
+                        {
+                            game.usedCards.Add(game.GetActivePlayer().ConvertJsonCardToCard(card));
+                            AnimateUseCard(currentPlayer, game.GetActivePlayer().ConvertJsonCardToCard(card));
                         }
                     }
                 }

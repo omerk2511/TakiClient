@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Taki.Cards;
 
 namespace Taki
 {
@@ -52,5 +53,6 @@ namespace Taki
         {
             return this.playersList.FindIndex(p => p == player);
         }
+       
     }
 }
