@@ -24,6 +24,21 @@ namespace Taki
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            //Application.Run(new WelcomeForm());
+            string[] players = new string[4];
+            for (int i = 0; i < 4; i++)
+            {
+                players[i] = "lolxd" + i.ToString();
+            }
+
+            List<JSONCard> activePlayerCards = new List<JSONCard>();
+            for (int i = 0; i < 8; i++)
+            {
+                activePlayerCards.Add(new JSONCard("number_card", "red", "3"));
+            }
+            
+
+            //Game game = new Game(players, activePlayerCards);
             Application.Run(new WelcomeForm());
         }
     }
