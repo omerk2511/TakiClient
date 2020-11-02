@@ -31,11 +31,9 @@ namespace Taki
             Number = number;
         }
 
-        public override string Serialize()
+        public override JSONCard Serialize()
         {
-            JSONCard card = new JSONCard("number_card",  Color.ToString().ToLower(), Number.ToString());
-            string jsonString = JsonSerializer.Serialize(card);
-            return jsonString;
+            return new JSONCard("number_card", Color.ToString().ToLower(), Number);
         }
 
         public override string GetResourceName()

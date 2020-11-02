@@ -9,11 +9,9 @@ namespace Taki.Cards
 {
     class SuperTakiCard : Card
     {
-        public override string Serialize()
+        public override JSONCard Serialize()
         {
-            JSONCard card = new JSONCard("super_taki", "", "");
-            string jsonString = JsonSerializer.Serialize(card);
-            return jsonString;
+            return new JSONCard("super_taki", "", "");
         }
 
         public override string GetResourceName()

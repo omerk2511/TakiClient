@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -32,18 +33,34 @@ namespace Taki
             if (password == "" || gameID == "")
             {
                 this.ErrorLabel.Text = "One of the values you entered was empty.";
+            }else if(!int.TryParse(gameID, out _))
+            {
+                this.ErrorLabel.Text = "Game ID must be a number from 0 to 10000";
             }
             else
             {
                 this.ErrorLabel.Text = "";
                 try
                 {
-                    // Join the game with server
-                    Game game = new Game(4); //TODO: Replace this with a function that creates a game
-                    Form form = new GameWindow(game);
-                    form.FormClosing += delegate { Environment.Exit(0); };
-                    form.Show();
-                    this.Hide();
+                    JoinGameJSON json = new JoinGameJSON(gameID, playerName, password);
+                    Client client = new Client();
+                    client.SendJSON(json);
+                    dynamic jsonObj = client.RecvJSON(true);
+                    if(jsonObj.status == "success")
+                    {
+                        client.jwt = jsonObj.args.jwt;
+
+                        // Join the game with server
+                        Form form = new WaitGameForm(client, ((JArray)jsonObj.args.players).ToObject<List<string>>());
+                        form.FormClosing += delegate { Environment.Exit(0); };
+                        form.Show();
+                        this.Hide();
+                    }
+                    else
+                    {
+                        Console.WriteLine(jsonObj.ToString());
+                    }
+                    
                 }
                 catch (TakiServerException exception)
                 {

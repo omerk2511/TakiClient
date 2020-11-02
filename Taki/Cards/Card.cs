@@ -8,7 +8,7 @@ namespace Taki
 {
     abstract class Card
     {
-        public abstract string Serialize();
+        public abstract JSONCard Serialize();
         public abstract string GetResourceName();
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Taki.Cards;
 
 namespace Taki
 {
@@ -12,42 +13,30 @@ namespace Taki
         private List<Player> playersList;
         public List<Card> usedCards;
 
-        // playersNum must be a number between 2 to 4
-        public Game(int playerNum)
+        public Game(string[] playerNames, List<JSONCard> activePlayerCards)
         {
-            if (playerNum > 4 || playerNum < 2)
+            if (playerNames.Length != 4) 
             {
                 throw new ArgumentException();
             }
-
             playersList = new List<Player>();
-
-            //##TEST
-            List<JSONCard> l = new List<JSONCard>();
-            for (int i = 0; i < 8; i++) {
-                l.Add(new JSONCard("number_card", "red", "1"));
-            }
-            playersList.Add(new ActivePlayer(l));
-            //##TEST
-
-            //playersList.Add(new ActivePlayer());
-
-
-            for (int i = 1; i < playerNum; i++)
+            playersList.Add(new ActivePlayer(playerNames[0], activePlayerCards));
+            for (int i = 1; i < playerNames.Length; i++)
             {
-                playersList.Add(new NonActivePlayer(8));
+                playersList.Add(new NonActivePlayer(playerNames[i], 8));
             }
 
             usedCards = new List<Card>();
-            for (int i = 0; i < 50; i++)
-            {
-                usedCards.Add(new NumberCard(1, Color.YELLOW));
-            }
         }
 
         public Player GetPlayer(int playerIndex)
         {
             return playersList[playerIndex];
+        }
+
+        public Player GetPlayerByName(string playerName)
+        {
+            return this.playersList.Find(p => p.name == playerName);
         }
 
         public ActivePlayer GetActivePlayer()
@@ -62,14 +51,8 @@ namespace Taki
         
         public int GetPlayerIndex(Player player)
         {
-            for(int i = 0; i < playersList.Count; i++)
-            {
-                if (playersList[i].Equals(player))
-                {
-                    return i;
-                }
-            }
-            return -1;
+            return this.playersList.FindIndex(p => p == player);
         }
+       
     }
 }

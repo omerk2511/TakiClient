@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,12 @@ namespace Taki
     {
         private List<Card> hand;
 
-        public ActivePlayer()
+        public ActivePlayer(string name) : base(name)
         {
             hand = new List<Card>();
         }
         
-        public ActivePlayer(List<JSONCard> jsonCards)
+        public ActivePlayer(string name, List<JSONCard> jsonCards) : base(name)
         {
             hand = new List<Card>();
             foreach(JSONCard c in jsonCards)
@@ -29,11 +30,10 @@ namespace Taki
         {
             hand.Add(card);
         }
-
-        void AddJSONCard(JSONCard jsonCard)
+        public Card ConvertJsonCardToCard(JSONCard jsonCard)
         {
             Card c = null;
-            string cardValue = jsonCard.value;
+            dynamic cardValue = jsonCard.value;
             Color cardColor = Color.UNDEFINED;
             if (jsonCard.color != "")
             {
@@ -42,7 +42,7 @@ namespace Taki
             switch (jsonCard.type)
             {
                 case "number_card":
-                    c = new NumberCard(int.Parse(cardValue), cardColor);
+                    c = new NumberCard(Convert.ToInt32(cardValue), cardColor);
                     break;
                 case "plus":
                     c = new PlusCard(cardColor);
@@ -65,8 +65,16 @@ namespace Taki
                 case "super_taki":
                     c = new SuperTakiCard();
                     break;
+
             }
+            return c;
+        }
+        Card AddJSONCard(JSONCard jsonCard)
+        {
+            Card c = null;
+            c = ConvertJsonCardToCard(jsonCard);
             hand.Add(c);
+            return c;
         }
 
         public Card GetResourcesNames(int cardIndex)
@@ -102,11 +110,49 @@ namespace Taki
             return lst;
         }
 
-        public string PlayCard(int cardIndex)
+        public List<Card> PlayCard(List<int> cardIndexes, Client client)
         {
-            Card card = RemoveCard(cardIndex);
-            string str = card.Serialize();
-            return str;
+            List<Card> cards = new List<Card>();
+            JSONCard[] jsonCards = new JSONCard[cardIndexes.Count];
+            for (int i = 0; i < jsonCards.Length; i++)
+            {
+                Card card = RemoveCard(cardIndexes[i]);
+                JSONCard jsonCard = card.Serialize();
+                jsonCards[i] = jsonCard;
+                cards.Add(card);
+            }
+            PlayCardJSON doMoveJson = new PlayCardJSON(client.jwt, jsonCards);
+            client.SendJSON(doMoveJson);
+            return cards;
+
+        }
+        
+        public List<Card> DrawCard(Client client)
+        {
+            TakeCardsJSON doMoveJson = new TakeCardsJSON(client.jwt);
+            client.SendJSON(doMoveJson);
+
+            dynamic cardsTakenJSON;
+            while (true)
+            {
+                cardsTakenJSON = client.RecvJSON(true);
+                if (cardsTakenJSON.status == "success")
+                {
+                    if (((JToken)cardsTakenJSON)["args"].Type != JTokenType.Null)
+                    {
+                        break;
+                    }
+                }
+            }
+
+
+            List<JSONCard> jsonCardsTaken = ((JArray)cardsTakenJSON.args.cards).ToObject<List<JSONCard>>();
+            List<Card> cardsTaken = new List<Card>();
+            foreach(JSONCard card in jsonCardsTaken)
+            {
+                cardsTaken.Add(this.AddJSONCard(card));
+            }
+            return cardsTaken;
         }
 
         public int GetCardAmountOfColor(Color color)
@@ -119,7 +165,6 @@ namespace Taki
                     if (((ColorCard)card).Color == color)
                         counter++;
                 }
-                    
             }
             return counter;
         }

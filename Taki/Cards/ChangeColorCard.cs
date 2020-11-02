@@ -9,11 +9,9 @@ namespace Taki.Cards
 {
     class ChangeColorCard: Card
     {
-        public override string Serialize()
+        public override JSONCard Serialize()
         {
-            JSONCard card = new JSONCard("change_color", "", "");
-            string jsonString = JsonSerializer.Serialize(card);
-            return jsonString;
+            return(new JSONCard("change_color", "", ""));
         }
 
         public override string GetResourceName()

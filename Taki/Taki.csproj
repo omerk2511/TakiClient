@@ -40,6 +40,9 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
@@ -78,11 +81,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client.cs" />
     <Compile Include="CreateGameForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CreateGameForm.Designer.cs">
       <DependentUpon>CreateGameForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommonJSON.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StartGameForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StartGameForm.Designer.cs">
+      <DependentUpon>StartGameForm.cs</DependentUpon>
     </Compile>
     <Compile Include="JoinGameForm.cs">
       <SubType>Form</SubType>
@@ -114,6 +130,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Cards\StopCard.cs" />
     <Compile Include="Cards\TwoPlusCard.cs" />
+    <Compile Include="WaitGameForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WaitGameForm.Designer.cs">
+      <DependentUpon>WaitGameForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="WelcomeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -122,23 +144,27 @@
     </Compile>
     <EmbeddedResource Include="CreateGameForm.resx">
       <DependentUpon>CreateGameForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StartGameForm.resx">
+      <DependentUpon>StartGameForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GameWindow.resx">
       <DependentUpon>GameWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="JoinGameForm.resx">
       <DependentUpon>JoinGameForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
+    <EmbeddedResource Include="WaitGameForm.resx">
+      <DependentUpon>WaitGameForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WelcomeForm.resx">
       <DependentUpon>WelcomeForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -156,23 +182,183 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\6g.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\6r.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\6y.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\7b.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\7g.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\7r.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\7y.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\8b.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\8g.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\8r.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\8y.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\9b.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\9g.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\9r.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\9y.png" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="Resources\1b.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1y.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1y.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1r.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\1g.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\1r.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1y.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2b.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2g.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2r.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2y.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\3b.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\3g.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\3r.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\3y.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\4b.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\4g.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\4r.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\4y.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\5b.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\5g.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\5r.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\5y.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\6b.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\plsg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\plsr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\plsy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\s_stk.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\s_swc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\s_swc_blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\s_swc_green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\s_swc_red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\s_swc_yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stpb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stpg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stpr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stpy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\swdb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\swdg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\swdr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\swdy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tkib.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tkig.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tkir.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tkiy.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\plsb.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
