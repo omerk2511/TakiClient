@@ -12,11 +12,33 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using Taki.Cards;
 
 namespace Taki
 {
     partial class GameWindow : Form
     {
+        // A class that indicates a card to animate. The struct contains 3 values:
+        // int delay - When this variable reaches 0, the animation should start.
+        // string imageName - the name of the image.
+        // Point animationPoint - the current point that indicates the top left corner of the animated image.
+        class AnimationData
+        {
+            public int delay { get; set; }
+            public string imageName { get; set; }
+            public Point animationPoint { get; set; }
+            public AnimationData(int delay, string imageName, Point animationPoint)
+            {
+                this.delay = delay;
+                this.imageName = imageName;
+                this.animationPoint = animationPoint;
+            }
+        }
+
+        // List of cards to animate
+        private List<AnimationData> animationData = new List<AnimationData>();
+        private bool animationStarted;
+
         private Game game;
         private Client client;
         private System.Timers.Timer timer;
@@ -26,6 +48,16 @@ namespace Taki
             InitializeComponent();
             this.game = game;
             this.client = client;
+
+            this.timer = new System.Timers.Timer(80);
+            this.timer.Enabled = false;
+            this.timer.Elapsed += new System.Timers.ElapsedEventHandler(timer1_Tick);
+
+        }
+        
+        public GameWindow()
+        {
+            InitializeComponent();
 
             this.timer = new System.Timers.Timer(80);
             this.timer.Enabled = false;
@@ -148,7 +180,7 @@ namespace Taki
         {
             if(player is ActivePlayer)
             {
-                CardAnimation(card.GetResourceName(), true);
+                CardAnimation(card.GetResourceName());
             }
             else
             {
@@ -204,7 +236,6 @@ namespace Taki
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             Graphics gfx = e.Graphics;
-            //Console.WriteLine(animationStarted);
             if (!animationStarted)
             {
                 gfx.Clear(this.BackColor);
@@ -258,23 +289,27 @@ namespace Taki
                 }
             }
             else {
-                Bitmap bmp = (Bitmap)Taki.Properties.Resources.ResourceManager.
-                  GetObject(this.animationImageName, Taki.Properties.Resources.Culture);
-                gfx.DrawImage(bmp, currentAnimationPoint.X, currentAnimationPoint.Y, cardWidth, cardHeight);
+                for(int i = 0; i < animationData.Count; i++)
+                {
+                    if (animationData[i].delay == 0)
+                    {
+                        Bitmap bmp = (Bitmap)Taki.Properties.Resources.ResourceManager.
+                            GetObject(animationData[i].imageName, Taki.Properties.Resources.Culture);
+                        gfx.DrawImage(bmp, animationData[i].animationPoint.X, animationData[i].animationPoint.Y, cardWidth, cardHeight);
+
+                    }
+                }
+
             }
             if (firstPaint)
             {
                 Thread connectionThread = new Thread(HandleConnection);
                 connectionThread.Start();
+
                 firstPaint = false;
+
             }
         }
-
-        // Animation variables
-        private Point currentAnimationPoint;
-        private bool animationStarted;
-        private string animationImageName;
-        private bool animationDirection;
 
         private void GameWindow_Load(object sender, EventArgs e)
         {
@@ -306,9 +341,9 @@ namespace Taki
                     {
                         Console.WriteLine("Its your turn.");
                         //Card cardPlayed = this.game.GetActivePlayer().PlayCard(0, this.client);
-                        Thread.Sleep(3000);
+                        Thread.Sleep(7000);
                         List<Card> cardDrawn = this.game.GetActivePlayer().DrawCard(client);
-                        foreach(Card card in cardDrawn)
+                        foreach (Card card in cardDrawn)
                         {
                             AnimateDrawCard(currentPlayer, card);
                         }
@@ -339,59 +374,49 @@ namespace Taki
         }
 
         // Draw an card animation. The card image should be specified with cardImageName.
-        // animationDirection should be true if the card animation needs to move from the deck
-        // to the user hand, false if the card animation needs to move from the hand to used
-        // cards pile
-        private void CardAnimation(string cardImageName, bool animationDirection)
+        private void CardAnimation(string cardImageName)
         {
-            this.animationDirection = animationDirection;
-            if (animationDirection)
-            {
-                currentAnimationPoint = new Point(deckX, deckY + cardHeight + 10);
-            }
-            else
-            {
-                currentAnimationPoint = new Point(usedCardsX, this.Height - cardWidth - 400);
-            }
-            
+            // delay to add before next card is drawn
+            int delay = animationData.Count * 5; 
+
+            animationData.Add(new AnimationData (delay, cardImageName, new Point(deckX, deckY + cardHeight + 10)));
+               
             this.animationStarted = true;
-            this.animationImageName = cardImageName;
-            this.timer.Start();
+            if(!this.timer.Enabled)
+                this.timer.Start();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (this.animationStarted)
             {
-                Rectangle reRenderRect = new Rectangle(currentAnimationPoint.X, currentAnimationPoint.Y, cardWidth, cardHeight);
-
-                if (this.animationDirection)
+                for(int i = 0; i < animationData.Count; i++ )
                 {
-                    currentAnimationPoint.Y += 10;
-
-                    if (currentAnimationPoint.Y + cardHeight + 100 > this.Height)
+                    if (animationData[i].delay == 0)
                     {
-                        this.animationStarted = false;
-                        this.timer.Stop();
-                        this.Invalidate(new Rectangle(0, (this.Height * 2) / 3, this.Width, this.Height / 3));
+                        Point newPoint = animationData[i].animationPoint;
+                        Rectangle reRenderRect = new Rectangle(newPoint.X, newPoint.Y, cardWidth, cardHeight);
+                        newPoint.Y += 10;
+                        animationData[i].animationPoint = newPoint;
+
+                        if (newPoint.Y + cardHeight + 100 > this.Height)
+                        {
+                            animationData.RemoveAt(i);
+                        }
+                        else
+                        {
+                            this.Invalidate(reRenderRect);
+                        }
+                        if (animationData.Count == 0)
+                        {
+                            this.animationStarted = false;
+                            this.timer.Stop();
+                            this.Invalidate(new Rectangle(0, (this.Height * 2) / 3, this.Width, this.Height / 3));
+                        }
                     }
                     else
                     {
-                        this.Invalidate(reRenderRect);
-                    }
-                }
-                else
-                {
-                    currentAnimationPoint.Y -= 10;
-                    if (currentAnimationPoint.Y < deckY)
-                    {
-                        this.timer.Stop();
-                        this.animationStarted = false;
-                        this.Invalidate(new Rectangle(0, (this.Height * 2) / 3, this.Width, this.Height / 3));
-                    }
-                    else
-                    {
-                        this.Invalidate(reRenderRect);
+                        animationData[i].delay -= 1;
                     }
                 }
             }
