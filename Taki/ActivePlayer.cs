@@ -110,21 +110,18 @@ namespace Taki
             return lst;
         }
 
-        public List<Card> PlayCard(List<int> cardIndexes, Client client)
+        public void PlayCard(List<Card> cardsToPlay, Client client)
         {
-            List<Card> cards = new List<Card>();
-            JSONCard[] jsonCards = new JSONCard[cardIndexes.Count];
+            JSONCard[] jsonCards = new JSONCard[cardsToPlay.Count];
             for (int i = 0; i < jsonCards.Length; i++)
             {
-                Card card = RemoveCard(cardIndexes[i]);
-                JSONCard jsonCard = card.Serialize();
+                hand.Remove(cardsToPlay[i]);
+                JSONCard jsonCard = cardsToPlay[i].Serialize();
                 jsonCards[i] = jsonCard;
-                cards.Add(card);
+                cardsToPlay.Add(cardsToPlay[i]);
             }
             PlayCardJSON doMoveJson = new PlayCardJSON(client.jwt, jsonCards);
             client.SendJSON(doMoveJson);
-            return cards;
-
         }
         
         public List<Card> DrawCard(Client client)

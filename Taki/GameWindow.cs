@@ -318,6 +318,7 @@ namespace Taki
 
         private void HandleConnection()
         {
+            Bot bot = new Bot(this.game);
             while (true)
             {
                 dynamic json = this.client.RecvJSON(true);
@@ -339,27 +340,28 @@ namespace Taki
                     Player currentPlayer = this.game.GetPlayerByName(currentPlayerName);
                     if (currentPlayer is ActivePlayer)
                     {
+                        MethodInvoker methodInvokerDelegate = delegate () { this.player1Label.Enabled = true; };
+                        this.Invoke(methodInvokerDelegate);
+
                         Console.WriteLine("Its your turn.");
                         // Make a turn: Draw or use card with ActivePlayer.PlayCard() or ActivePlayer.DrawCard(), then animate 
                         // the turn using AnimateDrawCard() or AnimateUseCard()
-                        
-                        
-                        
-                        
-                        
+
+                        bot.DoTurn(client, this);
+
                         Thread.Sleep(7000);
                     }
                     else
                     {
+
                         Console.WriteLine("Its " + currentPlayer.name + "'s turn.");
                     }
                 }
                 else if(json.code == "move_done")
                 {
-                    //dynamic moveDoneJson = this.client.RecvJSON(true);
+                    Player currentPlayer = this.game.GetPlayerByName(json.args.player_name.ToString());
                     if (json.args.type == "cards_taken")
                     {
-                        Player currentPlayer = this.game.GetPlayerByName(json.args.player_name.ToString());
                         if(currentPlayer is NonActivePlayer)
                         {
                             ((NonActivePlayer)currentPlayer).AddCards(json.args.amount.ToObject<int>());
@@ -371,21 +373,30 @@ namespace Taki
                     }
                     else if (json.args.type == "cards_placed")
                     {
-                        Player currentPlayer = this.game.GetPlayerByName(json.args.player_name.ToString());
                         List<JSONCard> used = ((JArray)json.args.cards).ToObject<List<JSONCard>>();
                         if (currentPlayer is NonActivePlayer)
                         {
                             ((NonActivePlayer)currentPlayer).RemoveCards(used.Count);
                         }
-                        foreach( JSONCard card in used)
+                        foreach( JSONCard jsonCard in used)
                         {
-                            game.usedCards.Add(game.GetActivePlayer().ConvertJsonCardToCard(card));
-                            AnimateUseCard(currentPlayer, game.GetActivePlayer().ConvertJsonCardToCard(card));
+                            // TODO: Dont let the user to use a non ColorCard
+                            Card card = game.GetActivePlayer().ConvertJsonCardToCard(jsonCard);
+                            if (card is ColorCard)
+                            {
+                                game.usedCards.Add((ColorCard)card);
+                            }
+                            AnimateUseCard(currentPlayer, card);
                         }
                     }
                 }
 
             }
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
 
         // Draw an card animation. The card image should be specified with cardImageName.

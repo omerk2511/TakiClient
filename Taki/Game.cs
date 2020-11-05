@@ -11,7 +11,7 @@ namespace Taki
     class Game
     {
         private List<Player> playersList;
-        public List<Card> usedCards;
+        public List<ColorCard> usedCards;
 
         public Game(string[] playerNames, List<JSONCard> activePlayerCards)
         {
@@ -26,7 +26,7 @@ namespace Taki
                 playersList.Add(new NonActivePlayer(playerNames[i], 8));
             }
 
-            usedCards = new List<Card>();
+            usedCards = new List<ColorCard>();
         }
 
         public Player GetPlayer(int playerIndex)
