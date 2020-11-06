@@ -10,7 +10,7 @@ namespace Taki
 {
     class ActivePlayer : Player
     {
-        private List<Card> hand;
+        private readonly List<Card> hand;
 
         public ActivePlayer(string name) : base(name)
         {
@@ -30,6 +30,7 @@ namespace Taki
         {
             hand.Add(card);
         }
+
         public Card ConvertJsonCardToCard(JSONCard jsonCard)
         {
             Card c = null;
@@ -69,10 +70,10 @@ namespace Taki
             }
             return c;
         }
+
         Card AddJSONCard(JSONCard jsonCard)
         {
-            Card c = null;
-            c = ConvertJsonCardToCard(jsonCard);
+            Card c = ConvertJsonCardToCard(jsonCard);
             hand.Add(c);
             return c;
         }
@@ -93,11 +94,9 @@ namespace Taki
         }
 
         // Remove the card specified by cardIndex and return it
-        public Card RemoveCard(int cardIndex)
+        public void RemoveCard(Card card)
         {
-            Card tempCard = hand[cardIndex];
-            hand.RemoveAt(cardIndex);
-            return tempCard;
+            hand.Remove(card);
         }
 
         public override List<string> GetCardResources()
@@ -110,15 +109,14 @@ namespace Taki
             return lst;
         }
 
-        public void PlayCard(List<Card> cardsToPlay, Client client)
+        public void PlayCard(List<Card> cardsToPlay, Client client, Color specialColor)
         {
             JSONCard[] jsonCards = new JSONCard[cardsToPlay.Count];
             for (int i = 0; i < jsonCards.Length; i++)
             {
-                hand.Remove(cardsToPlay[i]);
-                JSONCard jsonCard = cardsToPlay[i].Serialize();
+                JSONCard jsonCard = (cardsToPlay[i] is ISpecialCard card) ? card.SerializeColor(specialColor) : cardsToPlay[i].Serialize();
                 jsonCards[i] = jsonCard;
-                cardsToPlay.Add(cardsToPlay[i]);
+                hand.Remove(cardsToPlay[i]);
             }
             PlayCardJSON doMoveJson = new PlayCardJSON(client.jwt, jsonCards);
             client.SendJSON(doMoveJson);
@@ -230,11 +228,11 @@ namespace Taki
             List<Card> lst = new List<Card>();
             foreach (Card card in hand)
             {
-                if (card.GetType().Equals(card2.GetType()))
+                if (card.GetType().Equals(card2.GetType()) && card2 != card)
                 {
-                    if (card is NumberCard)
+                    if (card is NumberCard numberCard)
                     {
-                        if (((NumberCard)card).Number == ((NumberCard)card2).Number)
+                        if (numberCard.Number == ((NumberCard)card2).Number)
                             lst.Add(card);
                     }
                     else
@@ -249,9 +247,9 @@ namespace Taki
             int counter = 0;
             foreach (Card card in hand)
             {
-                if (card is ColorCard)
+                if (card is ColorCard colorCard)
                 {
-                    if (((ColorCard)card).Color== color)
+                    if (colorCard.Color == color)
                     {
                         if (!(card is NumberCard))
                             counter++;
@@ -261,17 +259,16 @@ namespace Taki
             return counter;
         }
 
-        public int CardAmountOfType(Type t)
+        public T GetCardOfType<T>() where T : Card
         {
-            int counter = 0;
             foreach (Card card in hand)
             {
-                if (card.GetType().Equals(t))
+                if (card is T c)
                 {
-                    counter++;
+                    return c;
                 }
             }
-            return counter;     
+            return null;
         }
     }
 }

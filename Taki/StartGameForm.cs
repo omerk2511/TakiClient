@@ -67,8 +67,6 @@ namespace Taki
                 {
                     Game game = new Game(players, activePlayerCards);
                     Form form = new GameWindow(game, this.client);
-                    form.Location = this.Location;
-                    form.StartPosition = FormStartPosition.Manual;
                     form.FormClosing += delegate { Environment.Exit(0); };
                     form.Show();
                     this.Hide();

@@ -41,7 +41,6 @@ namespace Taki
             this.ClientSize = new System.Drawing.Size(1289, 930);
             this.Name = "GameWindow";
             this.Text = "Taki";
-            this.Load += new System.EventHandler(this.GameWindow_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.ResumeLayout(false);
 

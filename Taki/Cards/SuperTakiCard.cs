@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Taki.Cards
 {
-    class SuperTakiCard : Card
+    class SuperTakiCard : Card, ISpecialCard
     {
         public override JSONCard Serialize()
         {
@@ -18,5 +18,11 @@ namespace Taki.Cards
         {
             return ("s_stk");
         }
+
+        JSONCard ISpecialCard.SerializeColor(Color color)
+        {
+            return new JSONCard("super_taki", color.ToString().ToLower(), "");
+        }
+
     }
 }

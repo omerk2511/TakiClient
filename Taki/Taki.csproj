@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bot.cs" />
+    <Compile Include="Cards\ISpecialCard.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="CreateGameForm.cs">
       <SubType>Form</SubType>
