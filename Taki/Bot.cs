@@ -14,9 +14,11 @@ namespace Taki
         private Game game;
         private Client client;
         private GameWindow gameWindow;
-  
+
         public Bot(Game game, Client client, GameWindow gameWindow)
         {
+
+
             this.game = game;
             this.client = client;
             this.gameWindow = gameWindow;
@@ -110,6 +112,7 @@ namespace Taki
             if(lastUsedCard is TakiCard)
             {
                 HandleTakiSuperTaki(cardsToAdd, lastUsedCard, Color.UNDEFINED);
+                return;
             }
 
             List<Card> takiCards = player.GetCardWithTypeOrNumber(new TakiCard(Color.UNDEFINED));
