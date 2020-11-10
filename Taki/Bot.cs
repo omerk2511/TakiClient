@@ -96,12 +96,18 @@ namespace Taki
 
         public void DoTurn(List<Card> cardsToAdd)
         {
+            Card lastUsedCard = null;
             if (game.usedCards.Count == 0)
             {
-                DoFirstTurn();
+                List<Card> cards = new List<Card>();
+                Tuple<int, List<Color>> commonColors = player.GetCommonColor();
+                lastUsedCard = player.GetAllCardsOfColor(commonColors.Item2[0])[0];
                 return;
             }
-            Card lastUsedCard = game.usedCards.Last();
+            else
+            {
+                lastUsedCard = game.usedCards.Last();
+            }
             
             if(lastUsedCard is TwoPlusCard)
             {
@@ -124,7 +130,7 @@ namespace Taki
                 return;
             }
 
-            List<Card> validCardsColor = player.GetAllCardsOfColor(game.usedCards.Last().Color);
+            List<Card> validCardsColor = player.GetAllCardsOfColor(lastUsedCard.Color);
             foreach (Card card in validCardsColor)
             {
                 if (card is NumberCard || card is StopCard || card is ChangeDirectionCard)
@@ -141,7 +147,7 @@ namespace Taki
 
             if(cardsToAdd.Count == 0)
             {
-                foreach (Card card in player.GetCardWithTypeOrNumber(game.usedCards.Last()))
+                foreach (Card card in player.GetCardWithTypeOrNumber(lastUsedCard))
                 {
                     if (card is NumberCard)
                     {
