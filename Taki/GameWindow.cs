@@ -39,6 +39,9 @@ namespace Taki
         private System.Timers.Timer timer;
 
         private Tuple<Point, int, int, Rectangle>[] playerRenderInfo;
+
+        private Rectangle colorRect;
+
         public GameWindow(Game game, Client client)
         {
             InitializeComponent();
@@ -49,14 +52,18 @@ namespace Taki
             this.timer.Enabled = false;
             this.timer.Elapsed += new System.Timers.ElapsedEventHandler(timer1_Tick);
 
-            playerRenderInfo = new Tuple<Point, int, int, Rectangle>[4];
-            playerRenderInfo[0] = new Tuple<Point, int, int, Rectangle>(new Point(this.Width / 2 - 50, this.Height * 8 / 9), 0, 200, new Rectangle(0, this.Height - 200, this.Width, 200)); // Down
-            playerRenderInfo[1] = new Tuple<Point, int, int, Rectangle>(new Point(-100, this.Height / 3), 90, 150, new Rectangle(0, 0, 200, this.Height)); // Left
-            playerRenderInfo[2] = new Tuple<Point, int, int, Rectangle>(new Point(this.Width / 2 - 100, -150), -180, 150, new Rectangle(0, 0, this.Width + 500, 200)); // Up
-            playerRenderInfo[3] = new Tuple<Point, int, int, Rectangle>(new Point(this.Width, this.Height / 3), -90, 150, new Rectangle(this.Width - 200, 0, 200, this.Height)); // Right
+            this.playerRenderInfo = new Tuple<Point, int, int, Rectangle>[4];
+            this.playerRenderInfo[0] = new Tuple<Point, int, int, Rectangle>(new Point(this.Width / 2 - 50, this.Height * 8 / 9), 0, 200, new Rectangle(0, this.Height - 200, this.Width, 200)); // Down
+            this.playerRenderInfo[1] = new Tuple<Point, int, int, Rectangle>(new Point(-100, this.Height / 3), 90, 150, new Rectangle(0, 0, 200, this.Height)); // Left
+            this.playerRenderInfo[2] = new Tuple<Point, int, int, Rectangle>(new Point(this.Width / 2 - 100, -150), -180, 150, new Rectangle(0, 0, this.Width + 500, 200)); // Up
+            this.playerRenderInfo[3] = new Tuple<Point, int, int, Rectangle>(new Point(this.Width, this.Height / 3), -90, 150, new Rectangle(this.Width - 200, 0, 200, this.Height)); // Right
 
+            this.deckX = (this.Width - cardWidth) / 2 - cardWidth;
+            this.deckY = this.Height / 2 - cardHeight;
+
+            this.colorRect = new Rectangle(deckX + 10, deckY + cardHeight + 20, 50, 50);
         }
-        
+
         public GameWindow()
         {
             InitializeComponent();
@@ -180,7 +187,7 @@ namespace Taki
         // card should contain null;
         public void AnimateDrawCard(Player player, Card card)
         {
-            if(player is ActivePlayer)
+            if (player is ActivePlayer)
             {
                 CardAnimation(card.GetResourceName());
             }
@@ -243,7 +250,7 @@ namespace Taki
 
                 // Draw the hands
                 List<string> resourcesNames;
-                for(int i = 0; i < 4; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     if (true) // TODO: chagne to false if a user left the game
                     {
@@ -257,20 +264,18 @@ namespace Taki
                         PaintHand(gfx, resourcesNames, playerRenderInfo[i].Item1.X, playerRenderInfo[i].Item1.Y, playerRenderInfo[i].Item2, playerRenderInfo[i].Item3);
                     }
                 }
-                
+
                 // Draw the deck
-                deckX = (this.Width - cardWidth) / 2 - cardWidth;
-                deckY = this.Height / 2 - cardHeight;
                 for (int i = 0; i < 20; i++)
                 {
                     RenderStashedCard(gfx, "back", deckX, deckY);
                 }
-                
+
                 // Draw the used cards
                 usedCardsX = (this.Width - cardWidth) / 2 + cardWidth;
                 usedCardsY = this.Height / 2 - cardHeight;
                 int off = 5;
-                if(this.game.usedCards.Count < 5)
+                if (this.game.usedCards.Count < 5)
                 {
                     off = this.game.usedCards.Count;
                 }
@@ -278,9 +283,16 @@ namespace Taki
                 {
                     RenderStashedCard(gfx, this.game.usedCards[i].GetResourceName(), usedCardsX, usedCardsY);
                 }
+                // Render current color circle
+                if (this.game.CurrentColor != Color.UNDEFINED)
+                {
+                    gfx.Transform = new Matrix();
+                    gfx.FillEllipse(new SolidBrush(System.Drawing.Color.FromName(this.game.CurrentColor.ToString().ToLower())), this.colorRect);
+                }
             }
-            else {
-                for(int i = 0; i < animationData.Count; i++)
+            else
+            {
+                for (int i = 0; i < animationData.Count; i++)
                 {
                     if (animationData[i].delay == 0)
                     {
@@ -298,13 +310,7 @@ namespace Taki
                 connectionThread.Start();
 
                 firstPaint = false;
-
             }
-        }
-
-        private void GameWindow_Load(object sender, EventArgs e)
-        {
-            
         }
 
         private void HandleConnection()
@@ -316,7 +322,7 @@ namespace Taki
                 Dictionary<string, object> values = ((JObject)json).ToObject<Dictionary<string, object>>();
                 if (values.ContainsKey("status"))
                 {
-                    if(json.status == "success")
+                    if (json.status == "success")
                     {
                         continue;
                     }
@@ -344,11 +350,10 @@ namespace Taki
                     }
                     else
                     {
-
                         Console.WriteLine("Its " + currentPlayer.name + "'s turn.");
                     }
                 }
-                else if(json.code == "move_done")
+                else if (json.code == "move_done")
                 {
                     Player currentPlayer = this.game.GetPlayerByName(json.args.player_name.ToString());
                     this.currentPlayerTurn = -1;
@@ -356,13 +361,17 @@ namespace Taki
 
                     if (json.args.type == "cards_taken")
                     {
-                        if(currentPlayer is NonActivePlayer player)
+                        if (currentPlayer is NonActivePlayer player)
                         {
                             player.AddCards(json.args.amount.ToObject<int>());
                         }
                         for (int i = 0; i < json.args.amount.ToObject<int>(); i++)
                         {
                             AnimateDrawCard(currentPlayer, null);
+                        }
+                        if (game.IsTwoPlusActive)
+                        {
+                            game.IsTwoPlusActive = false;
                         }
                     }
                     else if (json.args.type == "cards_placed")
@@ -372,15 +381,27 @@ namespace Taki
                         {
                             player.RemoveCards(used.Count);
                         }
-                        foreach( JSONCard jsonCard in used)
+                        foreach (JSONCard jsonCard in used)
                         {
-                            // TODO: Dont let the user to use a non ColorCard
+                            // TODO: Dont let the user use a non ColorCard
                             Card card = game.GetActivePlayer().ConvertJsonCardToCard(jsonCard);
                             if (card is ColorCard colorCard)
                             {
                                 game.usedCards.Add(colorCard);
+
                             }
                             AnimateUseCard(currentPlayer, card);
+                        }
+                        if (used.Last().type == "plus_2")
+                        {
+                            game.IsTwoPlusActive = true;
+                        }
+
+                        Color lastColor = game.CurrentColor;
+                        game.CurrentColor = (Color)Enum.Parse(typeof(Color), used.Last().color.ToUpper());
+                        if (lastColor != game.CurrentColor)
+                        {
+                            this.Invalidate(this.colorRect);
                         }
                     }
                 }
@@ -393,16 +414,21 @@ namespace Taki
 
         }
 
+        private void GameWindow_Load_2(object sender, EventArgs e)
+        {
+
+        }
+
         // Draw an card animation. The card image should be specified with cardImageName.
         private void CardAnimation(string cardImageName)
         {
             // delay to add before next card is drawn
-            int delay = animationData.Count * 5; 
+            int delay = animationData.Count * 5;
 
-            animationData.Add(new AnimationData (delay, cardImageName, new Point(deckX, deckY + cardHeight + 10)));
-               
+            animationData.Add(new AnimationData(delay, cardImageName, new Point(deckX, deckY + cardHeight + 10)));
+
             this.animationStarted = true;
-            if(!this.timer.Enabled)
+            if (!this.timer.Enabled)
                 this.timer.Start();
         }
 
@@ -410,7 +436,7 @@ namespace Taki
         {
             if (this.animationStarted)
             {
-                for(int i = 0; i < animationData.Count; i++ )
+                for (int i = 0; i < animationData.Count; i++)
                 {
                     if (animationData[i].delay == 0)
                     {

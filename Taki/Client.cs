@@ -41,7 +41,7 @@ namespace Taki
         public void SendJSON(object jsonObj)
         {
             string json = JsonConvert.SerializeObject(jsonObj);
-            Console.WriteLine("send "+json);
+            Console.WriteLine("send " + json);
             this.gameSocket.Send(Encoding.ASCII.GetBytes(json));
         }
         
