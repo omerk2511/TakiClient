@@ -114,12 +114,6 @@ namespace Taki
                 return;
             }
 
-            if (lastUsedCard is TakiCard && game.usedCards.Count != 0)
-            {
-                HandleTakiSuperTaki(cardsToAdd, lastUsedCard, Color.UNDEFINED);
-                return;
-            }
-
             List<Card> takiCards = player.GetCardWithTypeOrNumber(new TakiCard(Color.UNDEFINED));
             int takiIndex = takiCards.FindIndex(card => ((ColorCard)card).Color == game.CurrentColor);
             if(takiIndex != -1)
@@ -167,7 +161,9 @@ namespace Taki
                         cardsToAdd.Add(card);
                         HandlePlus(cardsToAdd);
                         break;
-                    }else if (card is TakiCard) {
+                    }
+                    else if (card is TakiCard)
+                    {
                         cardsToAdd.Add(card);
                         HandleTakiSuperTaki(cardsToAdd, card, Color.UNDEFINED);
                         return;
