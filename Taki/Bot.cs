@@ -15,10 +15,9 @@ namespace Taki
         private Client client;
         private GameWindow gameWindow;
 
+
         public Bot(Game game, Client client, GameWindow gameWindow)
         {
-
-
             this.game = game;
             this.client = client;
             this.gameWindow = gameWindow;
@@ -26,7 +25,7 @@ namespace Taki
         }
         
 
-        private void HandlePlusTwo(List<Card> cardsToAdd)
+        private void HandlePlusTwo()
         {
             List<Card> twoPlusCards = player.GetCardWithTypeOrNumber(new TwoPlusCard(Color.UNDEFINED));
             if (twoPlusCards.Count != 0)
@@ -62,7 +61,7 @@ namespace Taki
 
         private void HandlePlus(List<Card> cardsToAdd)
         {
-            List<Card> colorCards = player.GetAllCardsOfColor(((ColorCard)cardsToAdd.Last()).Color);
+            List<Card> colorCards = player.GetAllCardsOfColor(game.CurrentColor);
             foreach (Card card in colorCards)
             {
                 if (card == cardsToAdd.Last())
@@ -102,16 +101,15 @@ namespace Taki
                 List<Card> cards = new List<Card>();
                 Tuple<int, List<Color>> commonColors = player.GetCommonColor();
                 lastUsedCard = player.GetAllCardsOfColor(commonColors.Item2[0])[0];
-                return;
             }
             else
             {
                 lastUsedCard = game.usedCards.Last();
             }
             
-            if(lastUsedCard is TwoPlusCard)
+            if(lastUsedCard is TwoPlusCard && game.IsTwoPlusActive)
             {
-                HandlePlusTwo(cardsToAdd);
+                HandlePlusTwo();
                 return;
             }
 
@@ -122,7 +120,7 @@ namespace Taki
             }
 
             List<Card> takiCards = player.GetCardWithTypeOrNumber(new TakiCard(Color.UNDEFINED));
-            int takiIndex = takiCards.FindIndex(card => ((ColorCard)card).Color == ((ColorCard)lastUsedCard).Color);
+            int takiIndex = takiCards.FindIndex(card => ((ColorCard)card).Color == game.CurrentColor);
             if(takiIndex != -1)
             {
                 cardsToAdd.Add(takiCards[takiIndex]);
@@ -130,7 +128,7 @@ namespace Taki
                 return;
             }
 
-            List<Card> validCardsColor = player.GetAllCardsOfColor(lastUsedCard.Color);
+            List<Card> validCardsColor = player.GetAllCardsOfColor(game.CurrentColor);
             foreach (Card card in validCardsColor)
             {
                 if (card is NumberCard || card is StopCard || card is ChangeDirectionCard)
@@ -142,6 +140,7 @@ namespace Taki
                 {
                     cardsToAdd.Add(card);
                     HandlePlus(cardsToAdd);
+                    break;
                 }
             }
 
@@ -187,23 +186,6 @@ namespace Taki
             {
                 PlayCards(cardsToAdd, Color.UNDEFINED);
             }
-        }
-
-        private void DoFirstTurn()
-        { 
-            List<Card> cards = new List<Card>();
-            Tuple<int, List<Color>> commonColors = player.GetCommonColor();
-
-            foreach (Card card in player.GetAllCardsOfColor(commonColors.Item2[0]))
-            {
-                if (card is NumberCard)
-                {
-                    cards.Add(card);
-                    break;
-                }
-            }
-            PlayCards(cards, Color.UNDEFINED);
-
         }
 
         private void DrawCards()

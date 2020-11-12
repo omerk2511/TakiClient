@@ -13,6 +13,9 @@ namespace Taki
         private List<Player> playersList;
         public List<ColorCard> usedCards;
 
+        public bool IsTwoPlusActive { get; set; }
+        public Color CurrentColor { get; set; }
+
         public Game(string[] playerNames, List<JSONCard> activePlayerCards)
         {
             if (playerNames.Length != 4) 
@@ -27,6 +30,7 @@ namespace Taki
             }
 
             usedCards = new List<ColorCard>();
+            CurrentColor = Color.UNDEFINED;
         }
 
         public Player GetPlayer(int playerIndex)
