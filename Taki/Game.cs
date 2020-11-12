@@ -31,6 +31,7 @@ namespace Taki
 
             usedCards = new List<ColorCard>();
             CurrentColor = Color.UNDEFINED;
+            IsTwoPlusActive = false;
         }
 
         public Player GetPlayer(int playerIndex)
