@@ -409,7 +409,17 @@ namespace Taki
                 {
                     List<string> scoreboard = new List<string>();
                     scoreboard = ((JArray)json.args.scoreboard).ToObject<List<string>>();
-                    MessageBox.Show(scoreboard[0] + "\n" + scoreboard[1] + "\n" + scoreboard[2] + "\n" + scoreboard[3] + "\n","the result");
+                    string msg = "";
+                    string[] places = { "1st Place: ", "\n2nd Place: ", "\n3rd Place: ", "\n4th Place: " };
+                    int counter =0;
+                    foreach (string player in scoreboard)
+                    {
+                        msg += places[counter];
+                        msg +=  player.ToString();
+                        counter++;
+                    }
+                    MessageBox.Show(msg,"Scoreboard");
+                    Environment.Exit(0);
                 }
             }
         }

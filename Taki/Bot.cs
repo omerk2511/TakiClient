@@ -137,7 +137,6 @@ namespace Taki
                     }
                 }
             }
-
             if (cardsToAdd.Count == 0)
             {
                 foreach (Card card in validCardsColor)
@@ -149,6 +148,7 @@ namespace Taki
                     }
                 }
             }
+               
 
             if(cardsToAdd.Count == 0)
             {
