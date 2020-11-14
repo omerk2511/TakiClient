@@ -383,13 +383,8 @@ namespace Taki
                         }
                         foreach (JSONCard jsonCard in used)
                         {
-                            // TODO: Dont let the user use a non ColorCard
                             Card card = game.GetActivePlayer().ConvertJsonCardToCard(jsonCard);
-                            if (card is ColorCard colorCard)
-                            {
-                                game.usedCards.Add(colorCard);
-
-                            }
+                            game.usedCards.Add(card);
                             AnimateUseCard(currentPlayer, card);
                         }
                         if (used.Last().type == "plus_2")
