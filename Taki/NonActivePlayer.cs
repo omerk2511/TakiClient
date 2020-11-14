@@ -18,7 +18,7 @@ namespace Taki
 
         public void RemoveCards(int num)
         {
-            this._cardCount -= 1;
+            this._cardCount -= num;
         }
 
         public void AddCards(int num)
