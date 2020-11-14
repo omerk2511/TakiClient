@@ -11,7 +11,10 @@ namespace Taki
     class Game
     {
         private List<Player> playersList;
-        public List<Card> usedCards;
+        public List<ColorCard> usedCards;
+
+        public bool IsTwoPlusActive { get; set; }
+        public Color CurrentColor { get; set; }
 
         public Game(string[] playerNames, List<JSONCard> activePlayerCards)
         {
@@ -26,7 +29,9 @@ namespace Taki
                 playersList.Add(new NonActivePlayer(playerNames[i], 8));
             }
 
-            usedCards = new List<Card>();
+            usedCards = new List<ColorCard>();
+            CurrentColor = Color.UNDEFINED;
+            IsTwoPlusActive = false;
         }
 
         public Player GetPlayer(int playerIndex)

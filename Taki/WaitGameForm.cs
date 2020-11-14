@@ -100,8 +100,6 @@ namespace Taki
                         {
                             Game game = new Game(players, activePlayerCards);
                             Form form = new GameWindow(game, this.client);
-                            form.Location = this.Location;
-                            form.StartPosition = FormStartPosition.Manual;
                             form.FormClosing += delegate { Environment.Exit(0); };
                             form.Show();
                             this.Hide();
@@ -118,6 +116,11 @@ namespace Taki
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
+        }
+
+        private void memeberLabel_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Taki.Cards
 {
-    class ChangeColorCard: Card
+    class ChangeColorCard: Card, ISpecialCard
     {
         public override JSONCard Serialize()
         {
@@ -17,6 +17,11 @@ namespace Taki.Cards
         public override string GetResourceName()
         {
             return ("s_swc");
+        }
+
+        JSONCard ISpecialCard.SerializeColor(Color color)
+        {
+            return new JSONCard("change_color", color.ToString().ToLower(), "");
         }
     }
 }
