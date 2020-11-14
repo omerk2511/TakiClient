@@ -61,7 +61,7 @@ namespace Taki
 
         private void HandlePlus(List<Card> cardsToAdd)
         {
-            List<Card> colorCards = player.GetAllCardsOfColor(game.CurrentColor);
+            List<Card> colorCards = player.GetAllCardsOfColor(((ColorCard)cardsToAdd.Last()).Color);
             foreach (Card card in colorCards)
             {
                 if (card == cardsToAdd.Last())
@@ -125,23 +125,31 @@ namespace Taki
             }
 
             List<Card> validCardsColor = player.GetAllCardsOfColor(game.CurrentColor);
-            foreach (Card card in validCardsColor)
+            if (cardsToAdd.Count == 0)
             {
-                if (card is PlusCard)
+                foreach (Card card in validCardsColor)
                 {
-                    cardsToAdd.Add(card);
-                    HandlePlus(cardsToAdd);
-                    break;
+                    if (card is PlusCard)
+                    {
+                        cardsToAdd.Add(card);
+                        HandlePlus(cardsToAdd);
+                        break;
+                    }
                 }
             }
-            foreach (Card card in validCardsColor)
+            
+            if (cardsToAdd.Count == 0)
             {
-                if (card is NumberCard || card is StopCard || card is ChangeDirectionCard)
+                foreach (Card card in validCardsColor)
                 {
-                    cardsToAdd.Add(card);
-                    break;
+                    if (card is NumberCard || card is StopCard || card is ChangeDirectionCard)
+                    {
+                        cardsToAdd.Add(card);
+                        break;
+                    }
                 }
             }
+               
 
             if(cardsToAdd.Count == 0)
             {
