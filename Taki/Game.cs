@@ -11,7 +11,7 @@ namespace Taki
     class Game
     {
         private List<Player> playersList;
-        public List<ColorCard> usedCards;
+        public List<Card> usedCards;
 
         public bool IsTwoPlusActive { get; set; }
         public Color CurrentColor { get; set; }
@@ -29,7 +29,7 @@ namespace Taki
                 playersList.Add(new NonActivePlayer(playerNames[i], 8));
             }
 
-            usedCards = new List<ColorCard>();
+            usedCards = new List<Card>();
             CurrentColor = Color.UNDEFINED;
             IsTwoPlusActive = false;
         }
