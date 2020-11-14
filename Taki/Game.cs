@@ -29,9 +29,9 @@ namespace Taki
                 playersList.Add(new NonActivePlayer(playerNames[i], 8));
             }
 
-            usedCards = new List<Card>();
-            CurrentColor = Color.UNDEFINED;
-            IsTwoPlusActive = false;
+            this.usedCards = new List<Card>();
+            this.CurrentColor = Color.UNDEFINED;
+            this.IsTwoPlusActive = false;
         }
 
         public Player GetPlayer(int playerIndex)
