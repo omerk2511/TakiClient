@@ -405,7 +405,12 @@ namespace Taki
                         }
                     }
                 }
-
+                if (json.code == "game_ended")
+                {
+                    List<string> scoreboard = new List<string>();
+                    scoreboard = ((JArray)json.args.scoreboard).ToObject<List<string>>();
+                    MessageBox.Show(scoreboard[0] + "\n" + scoreboard[1] + "\n" + scoreboard[2] + "\n" + scoreboard[3] + "\n","the result");
+                }
             }
         }
 

@@ -91,6 +91,7 @@ namespace Taki
                     HandlePlus(cardsToAdd);
                 }
             }
+
         }
 
         public void DoTurn(List<Card> cardsToAdd)
@@ -126,13 +127,16 @@ namespace Taki
             List<Card> validCardsColor = player.GetAllCardsOfColor(game.CurrentColor);
             foreach (Card card in validCardsColor)
             {
-                if(card is PlusCard)
+                if (card is PlusCard)
                 {
                     cardsToAdd.Add(card);
                     HandlePlus(cardsToAdd);
                     break;
                 }
-                else if (card is NumberCard || card is StopCard || card is ChangeDirectionCard)
+            }
+            foreach (Card card in validCardsColor)
+            {
+                if (card is NumberCard || card is StopCard || card is ChangeDirectionCard)
                 {
                     cardsToAdd.Add(card);
                     break;
