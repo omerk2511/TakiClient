@@ -102,7 +102,7 @@
             this.Controls.Add(this.StartButton);
             this.Controls.Add(this.memeberLabel);
             this.Name = "StartGameForm";
-            this.Text = "Form1";
+            this.Text = "Wait for players";
             this.Load += new System.EventHandler(this.StartGameForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

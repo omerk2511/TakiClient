@@ -424,7 +424,8 @@ namespace Taki
                     if(p is NonActivePlayer playerLeft)
                     {
                         playerLeft.RemoveCards(playerLeft.GetCardAmount());
-                        AnimateUseCard(playerLeft, null);
+                        currentPlayerTurn = 5;
+                        AnimateDrawCard(playerLeft, null);
                     }
                 }
             }

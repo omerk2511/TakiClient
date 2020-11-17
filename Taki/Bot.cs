@@ -230,10 +230,6 @@ namespace Taki
         private void PlayCards(List<Card> cards, Color specialColor)
         {
             player.PlayCard(cards, client, specialColor);
-            //foreach (Card card in cards)
-            //{
-            //    gameWindow.AnimateUseCard(player, card);
-            //}
         }
     }
 }

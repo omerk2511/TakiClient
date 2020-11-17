@@ -117,7 +117,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
             this.Name = "CreateGameForm";
-            this.Text = "CreateGameForm";
+            this.Text = "Create Game";
             this.ResumeLayout(false);
             this.PerformLayout();
 
