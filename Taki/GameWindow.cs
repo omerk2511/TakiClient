@@ -403,21 +403,29 @@ namespace Taki
                         }
                     }
                 }
-                if (json.code == "game_ended")
+                else if (json.code == "game_ended")
                 {
-                    List<string> scoreboard = new List<string>();
-                    scoreboard = ((JArray)json.args.scoreboard).ToObject<List<string>>();
+                    List<string> scoreboard = ((JArray)json.args.scoreboard).ToObject<List<string>>();
                     string msg = "";
                     string[] places = { "1st Place: ", "\n2nd Place: ", "\n3rd Place: ", "\n4th Place: " };
-                    int counter =0;
+                    int counter = 0;
                     foreach (string player in scoreboard)
                     {
                         msg += places[counter];
                         msg +=  player.ToString();
                         counter++;
                     }
-                    MessageBox.Show(msg,"Scoreboard");
+                    MessageBox.Show(msg, "Scoreboard");
                     Environment.Exit(0);
+                }
+                else if (json.code == "player_left")
+                {
+                    Player p = game.GetPlayerByName(json.args.player_name.ToString());
+                    if(p is NonActivePlayer playerLeft)
+                    {
+                        playerLeft.RemoveCards(playerLeft.GetCardAmount());
+                        AnimateUseCard(playerLeft, null);
+                    }
                 }
             }
         }
@@ -428,6 +436,11 @@ namespace Taki
         }
 
         private void GameWindow_Load_2(object sender, EventArgs e)
+        {
+
+        }
+
+        private void GameWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
 
         }
