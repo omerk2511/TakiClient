@@ -96,7 +96,7 @@
             this.ErrorLabel.ForeColor = System.Drawing.Color.Red;
             this.ErrorLabel.Location = new System.Drawing.Point(66, 189);
             this.ErrorLabel.Name = "ErrorLabel";
-            this.ErrorLabel.Size = new System.Drawing.Size(127, 29);
+            this.ErrorLabel.Size = new System.Drawing.Size(0, 29);
             this.ErrorLabel.TabIndex = 9;
             this.ErrorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ErrorLabel.Click += new System.EventHandler(this.label5_Click);
@@ -113,7 +113,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "WelcomeForm";
-            this.Text = "WelcomeForm";
+            this.Text = "Welcome";
             this.ResumeLayout(false);
             this.PerformLayout();
 

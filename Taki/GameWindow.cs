@@ -42,6 +42,12 @@ namespace Taki
 
         private Rectangle colorRect;
 
+        const int cardWidth = 100;
+        const int cardHeight = 200;
+        int deckX, deckY;
+        int usedCardsX, usedCardsY;
+
+
         public GameWindow(Game game, Client client)
         {
             InitializeComponent();
@@ -61,7 +67,10 @@ namespace Taki
             this.deckX = (this.Width - cardWidth) / 2 - cardWidth;
             this.deckY = this.Height / 2 - cardHeight;
 
-            this.colorRect = new Rectangle(deckX + 10, deckY + cardHeight + 20, 50, 50);
+            this.usedCardsX = (this.Width - cardWidth) / 2 + cardWidth;
+            this.usedCardsY = this.Height / 2 - cardHeight;
+
+            this.colorRect = new Rectangle(usedCardsX + 10, usedCardsY + cardHeight + 20, 50, 50);
         }
 
         public GameWindow()
@@ -230,10 +239,6 @@ namespace Taki
             }
         }
 
-        const int cardWidth = 100;
-        const int cardHeight = 200;
-        int deckX, deckY;
-        int usedCardsX, usedCardsY;
 
         bool firstPaint = true;
         private void Form1_Paint(object sender, PaintEventArgs e)
@@ -272,8 +277,6 @@ namespace Taki
                 }
 
                 // Draw the used cards
-                usedCardsX = (this.Width - cardWidth) / 2 + cardWidth;
-                usedCardsY = this.Height / 2 - cardHeight;
                 int off = 5;
                 if (this.game.usedCards.Count < 5)
                 {
@@ -400,21 +403,30 @@ namespace Taki
                         }
                     }
                 }
-                if (json.code == "game_ended")
+                else if (json.code == "game_ended")
                 {
-                    List<string> scoreboard = new List<string>();
-                    scoreboard = ((JArray)json.args.scoreboard).ToObject<List<string>>();
+                    List<string> scoreboard = ((JArray)json.args.scoreboard).ToObject<List<string>>();
                     string msg = "";
                     string[] places = { "1st Place: ", "\n2nd Place: ", "\n3rd Place: ", "\n4th Place: " };
-                    int counter =0;
+                    int counter = 0;
                     foreach (string player in scoreboard)
                     {
                         msg += places[counter];
                         msg +=  player.ToString();
                         counter++;
                     }
-                    MessageBox.Show(msg,"Scoreboard");
+                    MessageBox.Show(msg, "Scoreboard");
                     Environment.Exit(0);
+                }
+                else if (json.code == "player_left")
+                {
+                    Player p = game.GetPlayerByName(json.args.player_name.ToString());
+                    if(p is NonActivePlayer playerLeft)
+                    {
+                        playerLeft.RemoveCards(playerLeft.GetCardAmount());
+                        currentPlayerTurn = 5;
+                        AnimateDrawCard(playerLeft, null);
+                    }
                 }
             }
         }
@@ -425,6 +437,11 @@ namespace Taki
         }
 
         private void GameWindow_Load_2(object sender, EventArgs e)
+        {
+
+        }
+
+        private void GameWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
 
         }

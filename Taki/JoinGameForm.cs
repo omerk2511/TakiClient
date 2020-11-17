@@ -56,11 +56,11 @@ namespace Taki
                         form.Show();
                         this.Hide();
                     }
-                    else
+                    else 
                     {
-                        Console.WriteLine(jsonObj.ToString());
+                        this.ErrorLabel.Text = jsonObj.args.message.ToString();
                     }
-                    
+
                 }
                 catch (TakiServerException exception)
                 {

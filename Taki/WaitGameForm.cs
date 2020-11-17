@@ -30,10 +30,6 @@ namespace Taki
             handleConnectionThread.Start();
         }
 
-        private void WaitGameForm_Load(object sender, EventArgs e)
-        {
-
-        }
 
         private void AddListBoxItem(string item)
         {
@@ -112,15 +108,6 @@ namespace Taki
             {
                 MessageBox.Show(ee.ToString());
             }
-        }
-
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
-        {
-        }
-
-        private void memeberLabel_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
