@@ -154,10 +154,5 @@ namespace Taki
                 MessageBox.Show(ee.ToString());
             }
         }
-
-        private void StartGameForm_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }

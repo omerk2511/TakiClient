@@ -52,7 +52,6 @@
             this.memeberLabel.Size = new System.Drawing.Size(230, 39);
             this.memeberLabel.TabIndex = 15;
             this.memeberLabel.Text = "Members: 2/4";
-            this.memeberLabel.Click += new System.EventHandler(this.memeberLabel_Click);
             // 
             // listBox1
             // 
@@ -75,7 +74,6 @@
             this.Controls.Add(this.headerLabel);
             this.Name = "WaitGameForm";
             this.Text = "WaitGameForm";
-            this.Load += new System.EventHandler(this.WaitGameForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
