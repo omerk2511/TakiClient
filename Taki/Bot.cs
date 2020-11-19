@@ -124,7 +124,19 @@ namespace Taki
                 return;
             }
 
+            List<Card> superTakiCards = player.GetCardWithTypeOrNumber(new SuperTakiCard());
+            Tuple<int, List<Color>> tp = player.GetCommonColor();
+            if (superTakiCards.Count != 0)
+            { 
+                if (tp.Item1 >= (player.GetCardAmount() / 2))
+                {
+                    cardsToAdd.Add(superTakiCards[0]);
+                    HandleTakiSuperTaki(cardsToAdd, superTakiCards[0], tp.Item2[0]);
+                    return;
+                }
+            }
             List<Card> validCardsColor = player.GetAllCardsOfColor(game.CurrentColor);
+
             if (cardsToAdd.Count == 0)
             {
                 foreach (Card card in validCardsColor)
